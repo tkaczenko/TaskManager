@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@android:drawable/menu_frame"
+            android:title="Tasks" />
+        <item
+            android:id="@+id/nav_employees"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="Employees" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@android:drawable/ic_menu_help"
+            android:title="About" />
+
+        <item
+            android:id="@+id/navigation_subheader"
+            android:title="Dictionaries">
+            <menu>
+                <item
+                    android:id="@+id/nav_sub_item_1"
+                    android:icon="@android:drawable/ic_menu_preferences"
+                    android:title="Positions" />
+                <item
+                    android:id="@+id/navigation_sub_item_2"
+                    android:icon="@android:drawable/ic_menu_help"
+                    android:title="Departments" />
+                <item
+                    android:id="@+id/nav_sub_task_types"
+                    android:icon="@android:drawable/ic_menu_help"
+                    android:title="Task types" />
+                <item
+                    android:id="@+id/nav_sub_task_sources"
+                    android:icon="@android:drawable/ic_menu_help"
+                    android:title="Task sources" />
+            </menu>
+        </item>
+    </group>
+</menu>
