@@ -8,13 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.tkaczenko.taskmanager.models.Position;
 import io.github.tkaczenko.taskmanager.models.Product;
 
 /**
  * Created by tkaczenko on 25.10.16.
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final String DBNAME = "sample.sqlite";
+    public static final String DBNAME = "tasks.sqlite";
     public static final String DBLOCATION = "/data/data/io.github.tkaczenko.taskmanager/databases/";
     private Context mContext;
     private SQLiteDatabase mDatabase;
@@ -52,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Product product = null;
         List<Product> productList = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM PRODUCT", null);
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM product", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             product = new Product(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3));
@@ -62,5 +63,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         closeDatabase();
         return productList;
+    }
+
+    public List<Position> getListPosition() {
+        Position position = null;
+        List<Position> positionList = new ArrayList<>();
+        openDatabase();
+        Cursor cursor = mDatabase.rawQuery("SELECT * FROM positions", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            position = new Position(cursor.getInt(0), cursor.getString(1));
+            positionList.add(position);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return positionList;
     }
 }

@@ -23,8 +23,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
+import io.github.tkaczenko.taskmanager.adapter.ListPositionAdapter;
 import io.github.tkaczenko.taskmanager.adapter.ListProductAdapter;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
+import io.github.tkaczenko.taskmanager.models.Position;
 import io.github.tkaczenko.taskmanager.models.Product;
 
 public class TasksActivity extends AppCompatActivity {
@@ -35,6 +37,7 @@ public class TasksActivity extends AppCompatActivity {
     private ListView lvProduct;
     private ListProductAdapter adapter;
     private List<Product> mProductList;
+    private List<Position> mPositionList;
     private DatabaseHelper mDBHelper;
 
     @Override
@@ -63,12 +66,19 @@ public class TasksActivity extends AppCompatActivity {
                 return;
             }
         }
+
+        mPositionList = mDBHelper.getListPosition();
+        ListPositionAdapter adapter1 = new ListPositionAdapter(this, mPositionList);
+        lvProduct.setAdapter(adapter1);
+
+        /*
         //Get product list in db when db exists
         mProductList = mDBHelper.getListProduct();
         //Init adapter
         adapter = new ListProductAdapter(this, mProductList);
         //Set adapter for listview
         lvProduct.setAdapter(adapter);
+        */
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
