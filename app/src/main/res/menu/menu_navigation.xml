@@ -15,18 +15,20 @@
             android:id="@+id/navigation_subheader"
             android:title="@string/nav_dictionaries">
             <menu>
-                <item
-                    android:id="@+id/nav_sub_positions"
-                    android:title="@string/nav_positions" />
-                <item
-                    android:id="@+id/nav_sub_departments"
-                    android:title="@string/nav_departments" />
-                <item
-                    android:id="@+id/nav_sub_task_types"
-                    android:title="@string/nav_types" />
-                <item
-                    android:id="@+id/nav_sub_task_sources"
-                    android:title="@string/nav_task_sources" />
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/nav_sub_positions"
+                        android:title="@string/nav_positions" />
+                    <item
+                        android:id="@+id/nav_sub_departments"
+                        android:title="@string/nav_departments" />
+                    <item
+                        android:id="@+id/nav_sub_task_types"
+                        android:title="@string/nav_types" />
+                    <item
+                        android:id="@+id/nav_sub_task_sources"
+                        android:title="@string/nav_task_sources" />
+                </group>
             </menu>
         </item>
     </group>

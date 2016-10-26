@@ -41,11 +41,9 @@ public class ListDictionaryObjectAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = View.inflate(mContext, R.layout.lv_item, null);
-        TextView tvName = (TextView)v.findViewById(R.id.tv_position_id);
-        TextView tvPrice = (TextView)v.findViewById(R.id.tv_position_name);
-        tvName.setText(String.valueOf(dictionaryObjects.get(position).getId()));
-        tvPrice.setText(dictionaryObjects.get(position).getName());
+        View v = View.inflate(mContext, R.layout.dictionary_item, null);
+        TextView tvName = (TextView)v.findViewById(R.id.tv_name);
+        tvName.setText(dictionaryObjects.get(position).getName());
         return v;
     }
 }
