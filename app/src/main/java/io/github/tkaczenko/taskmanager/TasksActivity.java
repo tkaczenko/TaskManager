@@ -51,15 +51,16 @@ public class TasksActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.mipmap.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
 
-        lvProduct = (ListView)findViewById(R.id.listview_product);
+        lvProduct = (ListView) findViewById(R.id.lv_positions);
         mDBHelper = new DatabaseHelper(this);
+
 
         //Check exists database
         File database = getApplicationContext().getDatabasePath(DatabaseHelper.DBNAME);
-        if(false == database.exists()) {
+        if (false == database.exists()) {
             mDBHelper.getReadableDatabase();
             //Copy db
-            if(copyDatabase(this)) {
+            if (copyDatabase(this)) {
                 Toast.makeText(this, "Copy database succes", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Copy data error", Toast.LENGTH_SHORT).show();
@@ -130,16 +131,16 @@ public class TasksActivity extends AppCompatActivity {
             InputStream inputStream = context.getAssets().open(DatabaseHelper.DBNAME);
             String outFileName = DatabaseHelper.DBLOCATION + DatabaseHelper.DBNAME;
             OutputStream outputStream = new FileOutputStream(outFileName);
-            byte[]buff = new byte[1024];
+            byte[] buff = new byte[1024];
             int length = 0;
             while ((length = inputStream.read(buff)) > 0) {
                 outputStream.write(buff, 0, length);
             }
             outputStream.flush();
             outputStream.close();
-            Log.w("MainActivity","DB copied");
+            Log.w("MainActivity", "DB copied");
             return true;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

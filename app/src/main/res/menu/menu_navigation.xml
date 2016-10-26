@@ -16,10 +16,10 @@
             android:title="@string/nav_dictionaries">
             <menu>
                 <item
-                    android:id="@+id/nav_sub_item_1"
+                    android:id="@+id/nav_sub_positions"
                     android:title="@string/nav_positions" />
                 <item
-                    android:id="@+id/navigation_sub_item_2"
+                    android:id="@+id/nav_sub_departments"
                     android:title="@string/nav_departments" />
                 <item
                     android:id="@+id/nav_sub_task_types"
