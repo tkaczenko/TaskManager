@@ -14,30 +14,24 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
-import io.github.tkaczenko.taskmanager.adapter.ListPositionAdapter;
-import io.github.tkaczenko.taskmanager.adapter.ListProductAdapter;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
+import io.github.tkaczenko.taskmanager.fragments.DictionaryFragments;
 import io.github.tkaczenko.taskmanager.models.Position;
-import io.github.tkaczenko.taskmanager.models.Product;
 
 public class TasksActivity extends AppCompatActivity {
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
 
-    private ListView lvProduct;
-    private ListProductAdapter adapter;
-    private List<Product> mProductList;
-    private List<Position> mPositionList;
     private DatabaseHelper mDBHelper;
 
     @Override
@@ -51,9 +45,7 @@ public class TasksActivity extends AppCompatActivity {
         ab.setHomeAsUpIndicator(R.mipmap.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
 
-        lvProduct = (ListView) findViewById(R.id.lv_positions);
         mDBHelper = new DatabaseHelper(this);
-
 
         //Check exists database
         File database = getApplicationContext().getDatabasePath(DatabaseHelper.DBNAME);
@@ -68,18 +60,19 @@ public class TasksActivity extends AppCompatActivity {
             }
         }
 
-        mPositionList = mDBHelper.getListPosition();
-        ListPositionAdapter adapter1 = new ListPositionAdapter(this, mPositionList);
-        lvProduct.setAdapter(adapter1);
+        if (findViewById(R.id.fragment_container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+            DictionaryFragments firstFragment = new DictionaryFragments();
+            Bundle args = new Bundle();
+            List<Position> mPositions = mDBHelper.getListPosition();
+            args.putParcelableArrayList("list", (ArrayList) mPositions);
+            firstFragment.setArguments(args);
 
-        /*
-        //Get product list in db when db exists
-        mProductList = mDBHelper.getListProduct();
-        //Init adapter
-        adapter = new ListProductAdapter(this, mProductList);
-        //Set adapter for listview
-        lvProduct.setAdapter(adapter);
-        */
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container, firstFragment).commit();
+        }
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 

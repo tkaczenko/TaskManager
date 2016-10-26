@@ -9,44 +9,43 @@ import android.widget.TextView;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
-import io.github.tkaczenko.taskmanager.models.Position;
+import io.github.tkaczenko.taskmanager.models.DictionaryObject;
 
 /**
  * Created by tkaczenko on 26.10.16.
  */
 
-public class ListPositionAdapter extends BaseAdapter {
+public class ListDictionaryObjectAdapter extends BaseAdapter {
     private Context mContext;
-    private List<Position> mPositionList;
+    private List<DictionaryObject> dictionaryObjects;
 
-    public ListPositionAdapter(Context mContext, List<Position> mPositionList) {
+    public ListDictionaryObjectAdapter(Context mContext, List<DictionaryObject> dictionaryObjects) {
         this.mContext = mContext;
-        this.mPositionList = mPositionList;
+        this.dictionaryObjects = dictionaryObjects;
     }
 
     @Override
     public int getCount() {
-        return mPositionList.size();
+        return dictionaryObjects.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return mPositionList.get(position);
+        return dictionaryObjects.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return mPositionList.get(position).getId();
+        return dictionaryObjects.get(position).getId();
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View v = View.inflate(mContext, R.layout.lv_item, null);
         TextView tvName = (TextView)v.findViewById(R.id.tv_position_id);
         TextView tvPrice = (TextView)v.findViewById(R.id.tv_position_name);
-        tvName.setText(mPositionList.get(position).getName());
-        tvPrice.setText(String.valueOf(mPositionList.get(position).getName()) + " $");
+        tvName.setText(String.valueOf(dictionaryObjects.get(position).getId()));
+        tvPrice.setText(dictionaryObjects.get(position).getName());
         return v;
     }
 }

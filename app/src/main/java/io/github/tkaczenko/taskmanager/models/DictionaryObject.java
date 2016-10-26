@@ -1,16 +1,35 @@
 package io.github.tkaczenko.taskmanager.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by tkaczenko on 26.10.16.
  */
 
-public abstract class DictionaryObject {
-    private int id;
-    private String name;
+public abstract class DictionaryObject implements Parcelable {
+    protected int id;
+    protected String name;
 
-    public DictionaryObject(int id, String name) {
+    protected DictionaryObject(int id, String name) {
         this.id = id;
         this.name = name;
+    }
+
+    protected DictionaryObject (Parcel parcel) {
+        this.id = parcel.readInt();
+        this.name = parcel.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public int getId() {
