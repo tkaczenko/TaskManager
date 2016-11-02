@@ -2,23 +2,16 @@ package io.github.tkaczenko.taskmanager;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -31,13 +24,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
-import io.github.tkaczenko.taskmanager.fragments.DictionaryFragments;
+import io.github.tkaczenko.taskmanager.fragments.DictionaryFragment;
+import io.github.tkaczenko.taskmanager.fragments.EditDictionaryFragment;
 import io.github.tkaczenko.taskmanager.models.Department;
+import io.github.tkaczenko.taskmanager.models.DictionaryObject;
 import io.github.tkaczenko.taskmanager.models.Position;
 import io.github.tkaczenko.taskmanager.models.TaskSource;
 import io.github.tkaczenko.taskmanager.models.TaskType;
 
-public class TasksActivity extends AppCompatActivity {
+public class TasksActivity extends AppCompatActivity
+        implements DictionaryFragment.OnDictionaryObjectSelectedListener {
     private DrawerLayout mDrawer;
     private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
@@ -71,7 +67,8 @@ public class TasksActivity extends AppCompatActivity {
             if (savedInstanceState != null) {
                 return;
             }
-            DictionaryFragments fragment = new DictionaryFragments();
+            //// TODO: 02.11.16 Initialize start fragment
+/*            DictionaryFragments fragment = new DictionaryFragments();
 
             Bundle args = new Bundle();
             List<Position> positions = mDBHelper.getListPosition();
@@ -80,6 +77,7 @@ public class TasksActivity extends AppCompatActivity {
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container, fragment).commit();
+            */
         }
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -90,9 +88,9 @@ public class TasksActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (mLayout != null &&
-        (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
-                || mLayout.getPanelState() ==
-                SlidingUpPanelLayout.PanelState.ANCHORED)) {
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+                        || mLayout.getPanelState() ==
+                        SlidingUpPanelLayout.PanelState.ANCHORED)) {
 
             mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
@@ -100,6 +98,7 @@ public class TasksActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_tasks, menu);
@@ -138,27 +137,27 @@ public class TasksActivity extends AppCompatActivity {
         Bundle args = new Bundle();
         switch (menuItem.getItemId()) {
             case R.id.nav_sub_positions:
-                fragmentClass = DictionaryFragments.class;
+                fragmentClass = DictionaryFragment.class;
                 List<Position> positions = mDBHelper.getListPosition();
                 args.putParcelableArrayList("list", (ArrayList) positions);
                 break;
             case R.id.nav_sub_departments:
-                fragmentClass = DictionaryFragments.class;
+                fragmentClass = DictionaryFragment.class;
                 List<Department> departments = mDBHelper.getListDepartments();
                 args.putParcelableArrayList("list", (ArrayList) departments);
                 break;
             case R.id.nav_sub_task_types:
-                fragmentClass = DictionaryFragments.class;
+                fragmentClass = DictionaryFragment.class;
                 List<TaskType> taskTypes = mDBHelper.getListTaskTypes();
                 args.putParcelableArrayList("list", (ArrayList) taskTypes);
                 break;
             case R.id.nav_sub_task_sources:
-                fragmentClass = DictionaryFragments.class;
+                fragmentClass = DictionaryFragment.class;
                 List<TaskSource> taskSources = mDBHelper.getListTaskSources();
                 args.putParcelableArrayList("list", (ArrayList) taskSources);
                 break;
             default:
-                fragmentClass = DictionaryFragments.class;
+                fragmentClass = DictionaryFragment.class;
                 List<Position> pos = mDBHelper.getListPosition();
                 args.putParcelableArrayList("list", (ArrayList) pos);
                 break;
@@ -199,5 +198,22 @@ public class TasksActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public void onDictionaryObjectSelected(DictionaryObject object) {
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+        try {
+            fragment = EditDictionaryFragment.class.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        args.putParcelable("object", object);
+        fragment.setArguments(args);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
     }
 }
