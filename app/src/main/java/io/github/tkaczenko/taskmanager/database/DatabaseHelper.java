@@ -20,12 +20,34 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "tasks.sqlite";
     public static final String DBLOCATION = "/data/data/io.github.tkaczenko.taskmanager/databases/";
+
+    public static final String EMPLOYEE_TABLE = "employees";
+    public static final String DEPARTMENT_TABLE = "departments";
+    public static final String POSITION_TABLE = "positions";
+
+    public static final String COLUMN_IDDEPARTMENT = "ID_DEPARTMENT";
+    public static final String COLUM_IDPOSITION = "ID_POSITION";
+    public static final String COLUMN_LAST_NAME = "LAST_NAME";
+    public static final String COLUMN_MID_NAME = "MID_NAME";
+    public static final String COLUMN_FIRST_NAME = "FIRST_NAME";
+
+    public static final String COLUMN_ID = "ID";
+    public static final String COLUMN_NAME = "NAME";
+
     private Context mContext;
     private SQLiteDatabase mDatabase;
+
+    private static DatabaseHelper instance;
 
     public DatabaseHelper(Context context) {
         super(context, DBNAME, null, 1);
         this.mContext = context;
+    }
+
+    public static synchronized DatabaseHelper getHelper(Context context) {
+        if (instance == null)
+            instance = new DatabaseHelper(context);
+        return instance;
     }
 
     @Override

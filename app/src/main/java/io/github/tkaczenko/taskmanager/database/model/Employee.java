@@ -19,6 +19,10 @@ public class Employee implements Parcelable {
     private String firstName;
     private Contact contact;
 
+    public Employee() {
+
+    }
+
     public Employee(Parcel in) {
         this.id = in.readInt();
         this.department = in.readParcelable(Department.class.getClassLoader());

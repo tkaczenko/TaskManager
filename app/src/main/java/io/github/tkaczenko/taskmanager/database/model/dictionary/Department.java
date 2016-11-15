@@ -7,6 +7,10 @@ import android.os.Parcel;
  */
 
 public class Department extends DictionaryObject {
+    public Department() {
+
+    }
+
     public Department(int id, String name) {
         super(id, name);
     }

@@ -19,6 +19,10 @@ public class Task {
     private String sourceDoc;
     private String sourceNum;
 
+    public Task() {
+
+    }
+
     public Task(int id, int idSource, int idType, String shortName, String description,
                 String dateIssue, String datePlanned, String dateExecution, String rejectionReason,
                 boolean completed, boolean canceled, String sourceDoc, String sourceNum) {

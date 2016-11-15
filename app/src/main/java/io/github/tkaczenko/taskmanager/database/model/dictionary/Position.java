@@ -7,6 +7,10 @@ import android.os.Parcel;
  */
 
 public class Position extends DictionaryObject {
+    public Position() {
+
+    }
+
     public Position(int id, String name) {
         super(id, name);
     }

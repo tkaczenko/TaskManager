@@ -7,6 +7,10 @@ import android.os.Parcel;
  */
 
 public class TaskSource extends DictionaryObject {
+    public TaskSource() {
+
+    }
+
     public TaskSource(int id, String name) {
         super(id, name);
     }
