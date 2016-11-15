@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager;
+package io.github.tkaczenko.taskmanager.activity;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -23,14 +23,15 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
-import io.github.tkaczenko.taskmanager.fragments.DictionaryFragment;
-import io.github.tkaczenko.taskmanager.fragments.EditDictionaryFragment;
-import io.github.tkaczenko.taskmanager.models.Department;
-import io.github.tkaczenko.taskmanager.models.DictionaryObject;
-import io.github.tkaczenko.taskmanager.models.Position;
-import io.github.tkaczenko.taskmanager.models.TaskSource;
-import io.github.tkaczenko.taskmanager.models.TaskType;
+import io.github.tkaczenko.taskmanager.fragment.DictionaryFragment;
+import io.github.tkaczenko.taskmanager.fragment.EditDictionaryFragment;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 
 public class TasksActivity extends AppCompatActivity
         implements DictionaryFragment.OnDictionaryObjectSelectedListener {
@@ -46,6 +47,7 @@ public class TasksActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.mipmap.ic_menu);
@@ -137,26 +139,41 @@ public class TasksActivity extends AppCompatActivity
         Bundle args = new Bundle();
         switch (menuItem.getItemId()) {
             case R.id.nav_sub_positions:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
                 fragmentClass = DictionaryFragment.class;
                 List<Position> positions = mDBHelper.getListPosition();
                 args.putParcelableArrayList("list", (ArrayList) positions);
                 break;
             case R.id.nav_sub_departments:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
                 fragmentClass = DictionaryFragment.class;
                 List<Department> departments = mDBHelper.getListDepartments();
                 args.putParcelableArrayList("list", (ArrayList) departments);
                 break;
             case R.id.nav_sub_task_types:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
                 fragmentClass = DictionaryFragment.class;
                 List<TaskType> taskTypes = mDBHelper.getListTaskTypes();
                 args.putParcelableArrayList("list", (ArrayList) taskTypes);
                 break;
             case R.id.nav_sub_task_sources:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
                 fragmentClass = DictionaryFragment.class;
                 List<TaskSource> taskSources = mDBHelper.getListTaskSources();
                 args.putParcelableArrayList("list", (ArrayList) taskSources);
                 break;
             default:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
                 fragmentClass = DictionaryFragment.class;
                 List<Position> pos = mDBHelper.getListPosition();
                 args.putParcelableArrayList("list", (ArrayList) pos);
@@ -202,6 +219,7 @@ public class TasksActivity extends AppCompatActivity
 
     @Override
     public void onDictionaryObjectSelected(DictionaryObject object) {
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         Fragment fragment = null;
         Bundle args = new Bundle();
         try {

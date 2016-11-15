@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager.models;
+package io.github.tkaczenko.taskmanager.database.model.dictionary;
 
 import android.os.Parcel;
 

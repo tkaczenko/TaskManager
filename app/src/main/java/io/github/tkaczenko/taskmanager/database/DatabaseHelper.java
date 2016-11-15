@@ -8,11 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.tkaczenko.taskmanager.models.Department;
-import io.github.tkaczenko.taskmanager.models.Position;
-import io.github.tkaczenko.taskmanager.models.Product;
-import io.github.tkaczenko.taskmanager.models.TaskSource;
-import io.github.tkaczenko.taskmanager.models.TaskType;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
+import io.github.tkaczenko.taskmanager.database.model.Employee;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 
 /**
  * Created by tkaczenko on 25.10.16.
@@ -52,27 +52,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<Product> getListProduct() {
-        Product product = null;
-        List<Product> productList = new ArrayList<>();
-        openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM product", null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            product = new Product(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), cursor.getString(3));
-            productList.add(product);
-            cursor.moveToNext();
-        }
-        cursor.close();
-        closeDatabase();
-        return productList;
-    }
-
     public List<Position> getListPosition() {
         Position position = null;
         List<Position> positions = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM positions", null);
+        Cursor cursor = mDatabase.query("positions", null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             position = new Position(cursor.getInt(0), cursor.getString(1));
@@ -85,10 +69,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Department> getListDepartments() {
-        Department department = null;
+        Department department;
         List<Department> departments = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM departments", null);
+        Cursor cursor = mDatabase.query("departments", null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             department = new Department(cursor.getInt(0), cursor.getString(1));
@@ -101,10 +85,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<TaskType> getListTaskTypes() {
-        TaskType taskType = null;
+        TaskType taskType;
         List<TaskType> taskTypes = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM task_types", null);
+        Cursor cursor = mDatabase.query("task_types", null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             taskType = new TaskType(cursor.getInt(0), cursor.getString(1));
@@ -117,10 +101,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<TaskSource> getListTaskSources() {
-        TaskSource taskSource = null;
+        TaskSource taskSource;
         List<TaskSource> taskSources = new ArrayList<>();
         openDatabase();
-        Cursor cursor = mDatabase.rawQuery("SELECT * FROM task_sources", null);
+        Cursor cursor =  mDatabase.query("task_sources", null, null, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             taskSource = new TaskSource(cursor.getInt(0), cursor.getString(1));
@@ -130,5 +114,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         closeDatabase();
         return taskSources;
+    }
+
+    public List<Employee> getListEmployees() {
+        String table = "employees as Emp inner join departments as Dep on Emp.ID_DEPARTMENT = Dep.ID" +
+                "inner join positions as Pos on Emp.ID_POSITION = Pos.ID";
+        String columns[] = { "Emp.LAST_NAME as Surname", "Emp.FIRST_NAME as Name",
+                "Dep.NAME as Department", "Pos.NAME as Position", "salary as Salary" };
+        Cursor c = mDatabase.query(table, columns, null, null, null, null, null);
+        c.close();
+        closeDatabase();
+        return null;
     }
 }

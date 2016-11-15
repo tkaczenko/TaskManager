@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager.models;
+package io.github.tkaczenko.taskmanager.database.model;
 
 /**
  * Created by tkaczenko on 26.10.16.

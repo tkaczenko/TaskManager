@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager.fragments;
+package io.github.tkaczenko.taskmanager.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import io.github.tkaczenko.taskmanager.R;
-import io.github.tkaczenko.taskmanager.models.DictionaryObject;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 
 /**
  * Created by tkaczenko on 02.11.16.

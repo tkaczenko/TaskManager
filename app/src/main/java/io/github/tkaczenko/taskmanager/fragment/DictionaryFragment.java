@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager.fragments;
+package io.github.tkaczenko.taskmanager.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.adapter.DictionaryObjectAdapter;
-import io.github.tkaczenko.taskmanager.models.DictionaryObject;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 
 /**
  * Created by tkaczenko on 02.11.16.

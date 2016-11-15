@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager.models;
+package io.github.tkaczenko.taskmanager.database.model.dictionary;
 
 import android.os.Parcel;
 
@@ -6,7 +6,7 @@ import android.os.Parcel;
  * Created by tkaczenko on 26.10.16.
  */
 
-public final class Position extends DictionaryObject {
+public class Position extends DictionaryObject {
     public Position(int id, String name) {
         super(id, name);
     }
