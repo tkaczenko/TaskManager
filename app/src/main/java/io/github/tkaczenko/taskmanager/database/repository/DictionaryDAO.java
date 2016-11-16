@@ -65,6 +65,7 @@ public class DictionaryDAO extends DAO<DictionaryObject> {
             dictionaryObjects.add(department);
         }
         return departments;*/
+        return null;
     }
 
     public List<DictionaryObject> getAll(Class dictionaryObjectClass) {

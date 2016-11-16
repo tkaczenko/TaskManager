@@ -25,8 +25,8 @@ public class EmployeeDAO extends DAO<Employee> {
     public static final String EMP_LAST_NAME_WITH_PREFIX = "emp.LAST_NAME";
     public static final String EMP_MID_NAME_WITH_PREFIX = "emp.MID_NAME";
     public static final String EMP_FIRST_NAME_WITH_PREFIX = "emp.FIRST_NAME";
-    public static final String EMP_PHONE_NUM_WITH_PREFIX ="emp.PHONE_NUM";
-    public static final String EMP_EMAIL_WITH_PREFIX = "emp.E-MAIL";
+    public static final String EMP_PHONE_NUM_WITH_PREFIX = "con.PHONE_NUM";
+    public static final String EMP_EMAIL_WITH_PREFIX = "con.EMAIL";
 
     private static final String WHERE_ID_EQUALS = DatabaseHelper.COLUMN_ID + " =?";
 
@@ -76,16 +76,19 @@ public class EmployeeDAO extends DAO<Employee> {
     @Override
     public List<Employee> getAll() {
         List<Employee> employees = new ArrayList<>();
+
         String query = "SELECT " + EMP_ID_WITH_PREFIX + "," +
                 DEP_ID_WITH_PREFIX + "," + DEP_NAME_WITH_PREFIX + "," +
                 POS_ID_WITH_PREFIX + "," + POS_NAME_WITH_PREFIX + "," +
                 EMP_LAST_NAME_WITH_PREFIX + "," + EMP_MID_NAME_WITH_PREFIX + "," +
-                EMP_FIRST_NAME_WITH_PREFIX + EMP_PHONE_NUM_WITH_PREFIX + "," +
-                EMP_EMAIL_WITH_PREFIX + "FROM " + DatabaseHelper.EMPLOYEE_TABLE + " emp," +
-                DatabaseHelper.DEPARTMENT_TABLE + " dep," + DatabaseHelper.POSITION_TABLE + " pos," +
-                DatabaseHelper.CONTACTS_TABLE + " con" +
-                "WHERE " + "emp.ID_DEPARTMENT = " + DEP_ID_WITH_PREFIX + "," +
-                "emp.ID_POSITION = " + POS_ID_WITH_PREFIX + "emp.ID = con.ID";
+                EMP_FIRST_NAME_WITH_PREFIX + "," + EMP_PHONE_NUM_WITH_PREFIX + "," +
+                EMP_EMAIL_WITH_PREFIX + " FROM " + DatabaseHelper.EMPLOYEE_TABLE + " emp" +
+                " LEFT OUTER JOIN " + DatabaseHelper.DEPARTMENT_TABLE + " dep" +
+                " ON " + "emp.ID_DEPARTMENT = " + DEP_ID_WITH_PREFIX +
+                " LEFT OUTER JOIN " + DatabaseHelper.POSITION_TABLE + " pos" +
+                " ON " + "emp.ID_POSITION = " + POS_ID_WITH_PREFIX +
+                " LEFT OUTER JOIN " + DatabaseHelper.CONTACTS_TABLE + " con" +
+                " ON " + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
@@ -112,6 +115,7 @@ public class EmployeeDAO extends DAO<Employee> {
 
             employees.add(employee);
         }
+        cursor.close();
         return employees;
     }
 }

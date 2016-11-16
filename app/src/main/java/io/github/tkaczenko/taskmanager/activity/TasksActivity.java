@@ -25,6 +25,8 @@ import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
+import io.github.tkaczenko.taskmanager.database.model.Employee;
+import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
 import io.github.tkaczenko.taskmanager.fragment.DictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.EditDictionaryFragment;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
@@ -32,9 +34,11 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObjec
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
+import io.github.tkaczenko.taskmanager.fragment.EmployeeFragment;
 
 public class TasksActivity extends AppCompatActivity
-        implements DictionaryFragment.OnDictionaryObjectSelectedListener {
+        implements DictionaryFragment.OnDictionaryObjectSelectedListener,
+        EmployeeFragment.OnEmployeeSelectedListener {
     private DrawerLayout mDrawer;
     private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
@@ -138,6 +142,14 @@ public class TasksActivity extends AppCompatActivity
         Class fragmentClass;
         Bundle args = new Bundle();
         switch (menuItem.getItemId()) {
+            case R.id.nav_employees:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+                fragmentClass = EmployeeFragment.class;
+                /*List<Employee> employees = employeeDAO.getAll();
+                args.putParcelableArrayList("list", (ArrayList) employees);*/
+                break;
             case R.id.nav_sub_positions:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -233,5 +245,11 @@ public class TasksActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+    }
+
+
+    @Override
+    public void onEmployeeSelected(Employee employee) {
+
     }
 }

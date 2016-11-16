@@ -54,6 +54,7 @@ public class DepartmentDAO extends DAO<Department> {
             Department department = new Department(cursor.getInt(0), cursor.getString(1));
             departments.add(department);
         }
+        cursor.close();
         return departments;
     }
 }

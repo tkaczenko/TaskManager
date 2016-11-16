@@ -19,6 +19,8 @@ public abstract class DAO<V> {
 
     public DAO(Context mContext) {
         this.mContext = mContext;
+        databaseHelper = DatabaseHelper.getHelper(mContext);
+        open();
     }
 
     public abstract long save(V value);
@@ -31,10 +33,5 @@ public abstract class DAO<V> {
             databaseHelper = DatabaseHelper.getHelper(mContext);
         }
         database = databaseHelper.getWritableDatabase();
-    }
-
-    public void close() {
-        databaseHelper.close();
-        database = null;
     }
 }
