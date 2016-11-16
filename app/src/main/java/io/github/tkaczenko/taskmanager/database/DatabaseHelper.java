@@ -24,6 +24,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String EMPLOYEE_TABLE = "employees";
     public static final String DEPARTMENT_TABLE = "departments";
     public static final String POSITION_TABLE = "positions";
+    public static final String TASK_SOURCE_TABLE = "task_sources";
+    public static final String TASK_TYPE_TABLE = "task_types";
 
     public static final String COLUMN_IDDEPARTMENT = "ID_DEPARTMENT";
     public static final String COLUM_IDPOSITION = "ID_POSITION";
