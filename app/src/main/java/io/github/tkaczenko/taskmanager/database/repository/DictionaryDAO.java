@@ -3,7 +3,6 @@ package io.github.tkaczenko.taskmanager.database.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.ContactsContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +93,7 @@ public class DictionaryDAO extends DAO<DictionaryObject> {
             }
             dictionaryObjects.add(department);
         }*/
+        return null;
     }
 
     private String checkTable(DictionaryObject value) {

@@ -76,16 +76,38 @@ public class Employee implements Parcelable {
         this.contact = contact;
     }
 
-    public class Contact implements Parcelable {
+    public static class Contact implements Parcelable {
         private int id;
         private String phoneNum;
         private String email;
+
+        public Contact() {
+
+        }
 
         public Contact(int id, String phoneNum, String email) {
             this.id = id;
             this.phoneNum = phoneNum;
             this.email = email;
         }
+
+        protected Contact(Parcel in) {
+            id = in.readInt();
+            phoneNum = in.readString();
+            email = in.readString();
+        }
+
+        public static final Creator<Contact> CREATOR = new Creator<Contact>() {
+            @Override
+            public Contact createFromParcel(Parcel in) {
+                return new Contact(in);
+            }
+
+            @Override
+            public Contact[] newArray(int size) {
+                return new Contact[size];
+            }
+        };
 
         public int getId() {
             return id;

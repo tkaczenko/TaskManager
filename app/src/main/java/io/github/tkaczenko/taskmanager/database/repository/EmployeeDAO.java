@@ -25,35 +25,52 @@ public class EmployeeDAO extends DAO<Employee> {
     public static final String EMP_LAST_NAME_WITH_PREFIX = "emp.LAST_NAME";
     public static final String EMP_MID_NAME_WITH_PREFIX = "emp.MID_NAME";
     public static final String EMP_FIRST_NAME_WITH_PREFIX = "emp.FIRST_NAME";
+    public static final String EMP_PHONE_NUM_WITH_PREFIX ="emp.PHONE_NUM";
+    public static final String EMP_EMAIL_WITH_PREFIX = "emp.E-MAIL";
+
+    private static final String WHERE_ID_EQUALS = DatabaseHelper.COLUMN_ID + " =?";
 
     public EmployeeDAO(Context mContext) {
         super(mContext);
     }
 
     @Override
-    public long save(Employee employee) {
+    public long save(Employee value) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseHelper.COLUMN_ID, employee.getId());
-        values.put(DatabaseHelper.COLUMN_IDDEPARTMENT, employee.getDepartment().getId());
-        values.put(DatabaseHelper.COLUM_IDPOSITION, employee.getPosition().getId());
-        values.put(DatabaseHelper.COLUMN_LAST_NAME, employee.getLastName());
-        values.put(DatabaseHelper.COLUMN_MID_NAME, employee.getMidName());
-        values.put(DatabaseHelper.COLUMN_FIRST_NAME, employee.getFirstName());
+        values.put(DatabaseHelper.COLUMN_ID, value.getId());
+        values.put(DatabaseHelper.COLUMN_IDDEPARTMENT, value.getDepartment().getId());
+        values.put(DatabaseHelper.COLUM_IDPOSITION, value.getPosition().getId());
+        values.put(DatabaseHelper.COLUMN_LAST_NAME, value.getLastName());
+        values.put(DatabaseHelper.COLUMN_MID_NAME, value.getMidName());
+        values.put(DatabaseHelper.COLUMN_FIRST_NAME, value.getFirstName());
 
         return database.insert(DatabaseHelper.EMPLOYEE_TABLE, null, values);
     }
 
     @Override
     public int update(Employee value) {
-        //// TODO: 15.11.16 Implement
-        return 0;
+        ContentValues values = new ContentValues();
+
+        values.put(DatabaseHelper.COLUMN_ID, value.getId());
+        values.put(DatabaseHelper.COLUMN_IDDEPARTMENT, value.getDepartment().getId());
+        values.put(DatabaseHelper.COLUM_IDPOSITION, value.getPosition().getId());
+        values.put(DatabaseHelper.COLUMN_LAST_NAME, value.getLastName());
+        values.put(DatabaseHelper.COLUMN_MID_NAME, value.getMidName());
+        values.put(DatabaseHelper.COLUMN_FIRST_NAME, value.getFirstName());
+
+        return database.update(
+                DatabaseHelper.EMPLOYEE_TABLE, values,
+                WHERE_ID_EQUALS, new String[]{String.valueOf(value.getId())}
+        );
     }
 
     @Override
     public long remove(Employee value) {
-        //// TODO: 15.11.16 Implement
-        return 0;
+        return database.delete(
+                DatabaseHelper.EMPLOYEE_TABLE, WHERE_ID_EQUALS,
+                new String[]{String.valueOf(value.getId())}
+        );
     }
 
     @Override
@@ -63,10 +80,12 @@ public class EmployeeDAO extends DAO<Employee> {
                 DEP_ID_WITH_PREFIX + "," + DEP_NAME_WITH_PREFIX + "," +
                 POS_ID_WITH_PREFIX + "," + POS_NAME_WITH_PREFIX + "," +
                 EMP_LAST_NAME_WITH_PREFIX + "," + EMP_MID_NAME_WITH_PREFIX + "," +
-                EMP_FIRST_NAME_WITH_PREFIX + "FROM " + DatabaseHelper.EMPLOYEE_TABLE + " emp," +
+                EMP_FIRST_NAME_WITH_PREFIX + EMP_PHONE_NUM_WITH_PREFIX + "," +
+                EMP_EMAIL_WITH_PREFIX + "FROM " + DatabaseHelper.EMPLOYEE_TABLE + " emp," +
                 DatabaseHelper.DEPARTMENT_TABLE + " dep," + DatabaseHelper.POSITION_TABLE + " pos," +
+                DatabaseHelper.CONTACTS_TABLE + " con" +
                 "WHERE " + "emp.ID_DEPARTMENT = " + DEP_ID_WITH_PREFIX + "," +
-                "emp.ID_POSITION = " + POS_ID_WITH_PREFIX;
+                "emp.ID_POSITION = " + POS_ID_WITH_PREFIX + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);
         while (cursor.moveToNext()) {
@@ -82,9 +101,14 @@ public class EmployeeDAO extends DAO<Employee> {
             employee.setLastName(cursor.getString(5));
             employee.setMidName(cursor.getString(6));
             employee.setFirstName(cursor.getString(7));
+            Employee.Contact contact = new Employee.Contact();
+            contact.setId(employee.getId());
+            contact.setPhoneNum(cursor.getString(8));
+            contact.setEmail(cursor.getString(9));
 
             employee.setDepartment(department);
             employee.setPosition(position);
+            employee.setContact(contact);
 
             employees.add(employee);
         }
