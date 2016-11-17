@@ -18,11 +18,11 @@ import io.github.tkaczenko.taskmanager.database.model.Employee;
 public class EmployeeAdapter extends
         RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder> {
     private List<Employee> mData;
-    private OnItemClickListener onItemClickListener;
+    private OnItemClickListener mListener;
 
     public EmployeeAdapter(List<Employee> data, OnItemClickListener listener) {
         this.mData = data;
-        this.onItemClickListener = listener;
+        this.mListener = listener;
     }
 
     public interface OnItemClickListener {
@@ -40,7 +40,7 @@ public class EmployeeAdapter extends
 
     @Override
     public void onBindViewHolder(EmployeeViewHolder holder, int position) {
-        holder.bind(mData.get(position), onItemClickListener);
+        holder.bind(mData.get(position), mListener);
     }
 
     @Override

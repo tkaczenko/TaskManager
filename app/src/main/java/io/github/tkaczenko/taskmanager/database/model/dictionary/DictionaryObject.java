@@ -20,7 +20,7 @@ public abstract class DictionaryObject implements Parcelable {
         this.name = name;
     }
 
-    protected DictionaryObject (Parcel parcel) {
+    protected DictionaryObject(Parcel parcel) {
         this.id = parcel.readInt();
         this.name = parcel.readString();
     }
@@ -50,5 +50,24 @@ public abstract class DictionaryObject implements Parcelable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DictionaryObject other = (DictionaryObject) obj;
+        if (id != other.id)
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

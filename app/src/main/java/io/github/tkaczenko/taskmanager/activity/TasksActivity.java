@@ -26,15 +26,15 @@ import java.util.List;
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
-import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
-import io.github.tkaczenko.taskmanager.fragment.DictionaryFragment;
-import io.github.tkaczenko.taskmanager.fragment.EditDictionaryFragment;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
+import io.github.tkaczenko.taskmanager.fragment.DictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.EmployeeFragment;
+import io.github.tkaczenko.taskmanager.fragment.UpdateDictionaryFragment;
+import io.github.tkaczenko.taskmanager.fragment.UpdateEmpFragment;
 
 public class TasksActivity extends AppCompatActivity
         implements DictionaryFragment.OnDictionaryObjectSelectedListener,
@@ -235,7 +235,7 @@ public class TasksActivity extends AppCompatActivity
         Fragment fragment = null;
         Bundle args = new Bundle();
         try {
-            fragment = EditDictionaryFragment.class.newInstance();
+            fragment = UpdateDictionaryFragment.class.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -245,11 +245,26 @@ public class TasksActivity extends AppCompatActivity
                 .beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+        mLayout.setTouchEnabled(false);
     }
 
 
     @Override
     public void onEmployeeSelected(Employee employee) {
-
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+        try {
+            fragment = UpdateEmpFragment.class.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        args.putParcelable("employee", employee);
+        fragment.setArguments(args);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+        mLayout.setTouchEnabled(true);
     }
 }

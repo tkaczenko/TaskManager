@@ -11,4 +11,14 @@
     <string name="nav_departments">Departments</string>
     <string name="nav_types">Task types</string>
     <string name="nav_task_sources">Task sources</string>
+    <string name="id">ID</string>
+    <string name="surname">Surname</string>
+    <string name="middle_name">Middle name</string>
+    <string name="first_name">First name</string>
+    <string name="department">Department</string>
+    <string name="position">Position</string>
+    <string name="phone_number">Phone number</string>
+    <string name="email">E-mail</string>
+    <string name="name">Name</string>
+    <string name="update">Update</string>
 </resources>
