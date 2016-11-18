@@ -61,9 +61,7 @@ public abstract class DictionaryObject implements Parcelable {
         if (getClass() != obj.getClass())
             return false;
         DictionaryObject other = (DictionaryObject) obj;
-        if (id != other.id)
-            return false;
-        return true;
+        return id == other.id;
     }
 
     @Override
