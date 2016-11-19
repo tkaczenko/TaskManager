@@ -135,14 +135,14 @@ public class TaskDAO extends DAO<Task> {
                 "," + TASK_SOURCE_NAME + "," + TASK_TYPE_ID + "," + TASK_TYPE_NAME + "," +
                 TASK_SHORT_NAME + "," + TASK_DESCRIPTION + "," + TASK_DATE_ISSUE + "," +
                 TASK_DATE_PLANNED + "," + TASK_DATE_EXECUTION + "," + TASK_COMPLETED + "," +
-                TASK_CANCELED + "," + TASK_SOURCE_DOC + "," + TASK_SOURCE_NUM +
+                TASK_CANCELED + "," + TASK_SOURCE_DOC + "," + TASK_SOURCE_NUM + "," +
                 EmployeeDAO.EMP_ID_WITH_PREFIX + "," + EmployeeDAO.DEP_ID_WITH_PREFIX + "," +
                 EmployeeDAO.DEP_NAME_WITH_PREFIX + "," + EmployeeDAO.POS_ID_WITH_PREFIX + "," +
                 EmployeeDAO.POS_NAME_WITH_PREFIX + "," + EmployeeDAO.EMP_LAST_NAME_WITH_PREFIX +
                 "," + EmployeeDAO.EMP_MID_NAME_WITH_PREFIX + "," +
                 EmployeeDAO.EMP_FIRST_NAME_WITH_PREFIX + "," +
                 EmployeeDAO.EMP_PHONE_NUM_WITH_PREFIX + "," + EmployeeDAO.EMP_EMAIL_WITH_PREFIX +
-                " FROM " + DatabaseContract.Task.TABLE_TASK + " task" + "," +
+                " FROM " + DatabaseContract.Task.TABLE_TASK + " task" +
                 " LEFT OUTER JOIN " + DatabaseContract.TaskSource.TABLE_TASK_TOURCE + " src" +
                 " ON " + "task.ID_SOURCE = " + TASK_SOURCE_ID +
                 " LEFT OUTER JOIN " + DatabaseContract.TaskType.TABLE_TASK_TYPE + " type" +
@@ -151,11 +151,11 @@ public class TaskDAO extends DAO<Task> {
                 " ON " + "task.ID = te.ID_TASK" +
                 " INNER JOIN " + DatabaseContract.Employee.TABLE_EMPLOYEE + " emp" +
                 " ON " + "te.ID_EMPLOYEE = emp.ID" +
-                " LEFT OUTER JOIN " + DatabaseContract.Department.TABLE_DEPARTMENT + " dep" +
-                " ON " + "emp.ID_DEPARTMENT = " + "dep.ID" +
-                " LEFT OUTER JOIN " + DatabaseContract.Position.TABLE_POSITION + " pos" +
-                " ON " + "emp.ID_POSITION = " + "pos.ID" +
-                " LEFT OUTER JOIN " + DatabaseContract.Contact.TABLE_CONTACT+ " con" +
+                " INNER JOIN " + DatabaseContract.Department.TABLE_DEPARTMENT + " dep" +
+                " ON " + "emp.ID_DEPARTMENT = dep.ID" +
+                " INNER JOIN " + DatabaseContract.Position.TABLE_POSITION + " pos" +
+                " ON " + "emp.ID_POSITION = pos.ID" +
+                " INNER JOIN " + DatabaseContract.Contact.TABLE_CONTACT + " con" +
                 " ON " + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);
@@ -197,6 +197,8 @@ public class TaskDAO extends DAO<Task> {
                     task.setDateExecution(formatter.parse(cursor.getString(9)));
                 } catch (ParseException e) {
                     task.setDateExecution(null);
+                } catch (NullPointerException e) {
+                    task.setDateExecution(null);
                 }
                 task.setCompleted(cursor.getInt(10) != 0);
                 task.setCanceled(cursor.getInt(11) != 0);
@@ -211,7 +213,7 @@ public class TaskDAO extends DAO<Task> {
         return tasks;
     }
 
-    public long createTaskEmp(long taskID, int empID) {
+    private long createTaskEmp(long taskID, int empID) {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.TaskEmployee.COLUMN_TASK, taskID);
         values.put(DatabaseContract.TaskEmployee.COLUMN_EMPLOYEE, empID);

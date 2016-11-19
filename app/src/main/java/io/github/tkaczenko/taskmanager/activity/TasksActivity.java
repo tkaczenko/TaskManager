@@ -25,6 +25,7 @@ import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.DatabaseContract;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
+import io.github.tkaczenko.taskmanager.database.model.Task;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
@@ -32,12 +33,13 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 import io.github.tkaczenko.taskmanager.fragment.DictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.EmployeeFragment;
+import io.github.tkaczenko.taskmanager.fragment.TaskFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateDictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateEmpFragment;
 
 public class TasksActivity extends AppCompatActivity
         implements DictionaryFragment.OnDictionaryObjectSelectedListener,
-        EmployeeFragment.OnEmployeeSelectedListener {
+        EmployeeFragment.OnEmployeeSelectedListener, TaskFragment.OnTaskSelectedListener {
     private DrawerLayout mDrawer;
     private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
@@ -140,6 +142,12 @@ public class TasksActivity extends AppCompatActivity
         Fragment fragment;
         DictionaryFragment temp;
         switch (menuItem.getItemId()) {
+            case R.id.nav_tasks:
+                if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
+                    mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                }
+                fragment = new TaskFragment();
+                break;
             case R.id.nav_employees:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
@@ -255,5 +263,11 @@ public class TasksActivity extends AppCompatActivity
                 .replace(R.id.container, fragment)
                 .commit();
         mLayout.setTouchEnabled(true);
+    }
+
+    @Override
+    public void onTaskSelected(Task task) {
+        //// TODO: 19.11.16 Implement
+
     }
 }
