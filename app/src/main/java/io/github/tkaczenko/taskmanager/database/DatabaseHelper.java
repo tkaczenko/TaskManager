@@ -28,6 +28,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TASK_TYPE_TABLE = "task_types";
     public static final String CONTACTS_TABLE = "contacts";
 
+    public static final String TASK_TABLE = "tasks";
+    public static final String TABLE_TASK_EMP = "task_employee";
+
+    public static final String COLUMN_IDSOURCE = "ID_SOURCE";
+    public static final String COLUMN_IDTYPE = "ID_TYPE";
+    public static final String COLUMN_SHORT_NAME = "SHORT_NAME";
+    public static final String COLUMN_DESCRIPTION = "DESCRIPTION";
+    public static final String COLUMN_DATE_ISSUE = "DATE_ISSUE";
+    public static final String COLUMN_DATE_PLANNED = "DATE_PLANNED";
+    public static final String COLUMN_DATE_EXECUTION = "DATE_EXECUTION";
+    public static final String COLUMN_REJUCTION_REASON = "REJUCTION_RESON";
+    public static final String COLUMN_COMPLETED = "COMPLETED";
+    public static final String COLUMN_CANCELED = "CANCELED";
+    public static final String COLUMN_SOURCE_DOC = "SOURCE_DOC";
+    public static final String COLUMN_SOURCE_NUM = "SOURCE_NUM";
+
     public static final String COLUMN_IDDEPARTMENT = "ID_DEPARTMENT";
     public static final String COLUM_IDPOSITION = "ID_POSITION";
     public static final String COLUMN_LAST_NAME = "LAST_NAME";

@@ -30,7 +30,7 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     }
 
     @Override
-    public long save(T value) {
+    public long save(T value, int... ids) {
         ContentValues values = new ContentValues();
         values.put(DatabaseHelper.COLUMN_ID, value.getId());
         values.put(DatabaseHelper.COLUMN_NAME, value.getName());

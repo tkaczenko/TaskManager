@@ -35,7 +35,7 @@ public class EmployeeDAO extends DAO<Employee> {
     }
 
     @Override
-    public long save(Employee value) {
+    public long save(Employee value, Integer... ids) {
         ContentValues values = new ContentValues();
 
         values.put(DatabaseHelper.COLUMN_ID, value.getId());

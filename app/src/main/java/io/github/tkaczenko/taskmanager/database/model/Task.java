@@ -4,11 +4,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Created by tkaczenko on 26.10.16.
  */
-//// TODO: 19.11.16 Implement Parcelable
+
 public class Task implements Parcelable {
     private int id;
     private int idSource;
@@ -24,7 +25,7 @@ public class Task implements Parcelable {
     private String sourceDoc;
     private String sourceNum;
 
-    //// TODO: 19.11.16 Read about manytomany and implement
+    private Set<Employee> employees;
 
     public Task() {
 

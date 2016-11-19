@@ -3,6 +3,8 @@ package io.github.tkaczenko.taskmanager.database.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Set;
+
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
 
@@ -18,6 +20,8 @@ public class Employee implements Parcelable {
     private String midName;
     private String firstName;
     private Contact contact;
+
+    private Set<Task> tasks;
 
     public Employee() {
 

@@ -23,7 +23,7 @@ public abstract class DAO<V> {
         open();
     }
 
-    public abstract long save(V value);
+    public abstract long save(V value, Integer... ids);
     public abstract int update(V value);
     public abstract long remove(V value);
     public abstract List<V> getAll();

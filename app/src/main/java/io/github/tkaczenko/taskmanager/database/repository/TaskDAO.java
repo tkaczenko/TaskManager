@@ -3,6 +3,7 @@ package io.github.tkaczenko.taskmanager.database.repository;
 import android.content.ContentValues;
 import android.content.Context;
 
+import java.util.Arrays;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.database.model.Task;
@@ -17,8 +18,10 @@ public class TaskDAO extends DAO<Task> {
     }
 
     @Override
-    public long save(Task value) {
+    public long save(Task value, Integer... ids) {
         ContentValues values = new ContentValues();
+
+        List<Integer> ints = Arrays.asList(ids);
 
         return 0;
     }
