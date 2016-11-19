@@ -27,12 +27,8 @@ import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
 public class UpdateEmpFragment extends Fragment implements View.OnClickListener {
     private EditText etID, etSurname, etMidName, etName, etPhone, etEmail;
     private Spinner sDepartment, sPosition;
-    private Button btnUpdate;
 
     private Employee employee;
-
-    private ArrayAdapter<Department> departmentAdapter;
-    private ArrayAdapter<Position> positionAdapter;
 
     @Nullable
     @Override
@@ -54,7 +50,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
         etEmail = (EditText) v.findViewById(R.id.etEmail);
         sDepartment = (Spinner) v.findViewById(R.id.sDepartment);
         sPosition = (Spinner) v.findViewById(R.id.sPosition);
-        btnUpdate = (Button) v.findViewById(R.id.btnUpdate);
+        Button btnUpdate = (Button) v.findViewById(R.id.btnUpdate);
 
         if (btnUpdate != null) {
             btnUpdate.setOnClickListener(this);
@@ -64,7 +60,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
                 getActivity(), Department.class
         );
         List<Department> departments = departmentDAO.getAll();
-        departmentAdapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<Department> departmentAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, departments);
         sDepartment.setAdapter(departmentAdapter);
 
@@ -72,7 +68,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
                 getActivity(), Position.class
         );
         List<Position> positions = positionDAO.getAll();
-        positionAdapter = new ArrayAdapter<>(getActivity(),
+        ArrayAdapter<Position> positionAdapter = new ArrayAdapter<>(getActivity(),
                 android.R.layout.simple_list_item_1, positions);
         sPosition.setAdapter(positionAdapter);
 

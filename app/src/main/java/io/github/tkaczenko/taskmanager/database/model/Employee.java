@@ -27,7 +27,17 @@ public class Employee implements Parcelable {
 
     }
 
-    public Employee(Parcel in) {
+    public Employee(int id, Department department, Position position,
+                    String lastName, String midName, String firstName) {
+        this.id = id;
+        this.department= department;
+        this.position = position;
+        this.lastName = lastName;
+        this.midName = midName;
+        this.firstName = firstName;
+    }
+
+    private Employee(Parcel in) {
         this.id = in.readInt();
         this.department = in.readParcelable(Department.class.getClassLoader());
         this.position = in.readParcelable(Position.class.getClassLoader());
@@ -35,15 +45,6 @@ public class Employee implements Parcelable {
         this.midName = in.readString();
         this.firstName = in.readString();
         this.contact = in.readParcelable(Contact.class.getClassLoader());
-    }
-
-    public Employee(int id, Department department, Position position, String lastName, String midName, String firstName) {
-        this.id = id;
-        this.department= department;
-        this.position = position;
-        this.lastName = lastName;
-        this.midName = midName;
-        this.firstName = firstName;
     }
 
     @Override
@@ -95,7 +96,7 @@ public class Employee implements Parcelable {
             this.email = email;
         }
 
-        protected Contact(Parcel in) {
+        Contact(Parcel in) {
             id = in.readInt();
             phoneNum = in.readString();
             email = in.readString();

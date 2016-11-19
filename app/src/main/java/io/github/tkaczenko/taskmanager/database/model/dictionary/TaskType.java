@@ -15,7 +15,7 @@ public class TaskType extends DictionaryObject {
         super(id, name);
     }
 
-    protected TaskType(Parcel parcel) {
+    private TaskType(Parcel parcel) {
         super(parcel);
     }
 

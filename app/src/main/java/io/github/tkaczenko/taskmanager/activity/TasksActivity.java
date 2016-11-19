@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import io.github.tkaczenko.taskmanager.R;
+import io.github.tkaczenko.taskmanager.database.DatabaseContract;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
@@ -56,7 +57,7 @@ public class TasksActivity extends AppCompatActivity
         ab.setDisplayHomeAsUpEnabled(true);
 
         mDBHelper = new DatabaseHelper(this);
-        File database = getApplicationContext().getDatabasePath(DatabaseHelper.DBNAME);
+        File database = getApplicationContext().getDatabasePath(DatabaseContract.DATABASE_NAME);
         if (false == database.exists()) {
             mDBHelper.getReadableDatabase();
             if (copyDatabase(this)) {
@@ -200,8 +201,8 @@ public class TasksActivity extends AppCompatActivity
 
     private boolean copyDatabase(Context context) {
         try {
-            InputStream inputStream = context.getAssets().open(DatabaseHelper.DBNAME);
-            String outFileName = DatabaseHelper.DBLOCATION + DatabaseHelper.DBNAME;
+            InputStream inputStream = context.getAssets().open(DatabaseContract.DATABASE_NAME);
+            String outFileName = DatabaseHelper.DBLOCATION + DatabaseContract.DATABASE_NAME;
             OutputStream outputStream = new FileOutputStream(outFileName);
             byte[] buff = new byte[1024];
             int length = 0;

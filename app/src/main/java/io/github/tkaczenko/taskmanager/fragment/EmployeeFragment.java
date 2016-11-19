@@ -29,9 +29,7 @@ public class EmployeeFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private Activity activity;
-    private List<Employee> employees;
 
-    private EmployeeAdapter adapter;
     private EmployeeDAO employeeDAO;
 
     private GetEmpTask task;
@@ -93,10 +91,9 @@ public class EmployeeFragment extends Fragment {
         protected void onPostExecute(List<Employee> empList) {
             if (activityWeakRef.get() != null
                     && !activityWeakRef.get().isFinishing()) {
-                employees = empList;
                 if (empList != null) {
                     if (empList.size() != 0) {
-                        adapter = new EmployeeAdapter(empList,
+                        EmployeeAdapter adapter = new EmployeeAdapter(empList,
                                 new EmployeeAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(Employee employee) {

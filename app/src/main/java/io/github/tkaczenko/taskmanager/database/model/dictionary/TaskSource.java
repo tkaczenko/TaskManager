@@ -15,7 +15,7 @@ public class TaskSource extends DictionaryObject {
         super(id, name);
     }
 
-    protected TaskSource(Parcel parcel) {
+    private TaskSource(Parcel parcel) {
         super(parcel);
     }
 

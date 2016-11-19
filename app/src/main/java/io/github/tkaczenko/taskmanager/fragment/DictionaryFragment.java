@@ -29,13 +29,9 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     private RecyclerView mRecyclerView;
 
     private Activity mActivity;
-    private List<T> mData;
 
-    private DictionaryObjectAdapter adapter;
     private DictionaryDAO<T> dictionaryDAO;
     private Class<T> dictionaryObjectClass;
-
-    private GetDicTask task;
 
     private OnDictionaryObjectSelectedListener mListener;
 
@@ -72,7 +68,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(manager);
 
-        task = new GetDicTask(mActivity);
+        GetDicTask task = new GetDicTask(mActivity);
         task.execute((Void) null);
 
         return v;
@@ -86,7 +82,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
 
         private final WeakReference<Activity> activityWeakRef;
 
-        public GetDicTask(Activity context) {
+        GetDicTask(Activity context) {
             this.activityWeakRef = new WeakReference<>(context);
         }
 
@@ -99,10 +95,10 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         protected void onPostExecute(List<T> dicList) {
             if (activityWeakRef.get() != null
                     && !activityWeakRef.get().isFinishing()) {
-                mData = dicList;
                 if (dicList != null) {
                     if (dicList.size() != 0) {
-                        adapter = new DictionaryObjectAdapter((List<DictionaryObject>) dicList,
+                        DictionaryObjectAdapter adapter = new DictionaryObjectAdapter(
+                                (List<DictionaryObject>) dicList,
                                 new DictionaryObjectAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(DictionaryObject item) {

@@ -7,7 +7,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
+import io.github.tkaczenko.taskmanager.database.DatabaseContract;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
@@ -17,18 +17,18 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
  */
 
 public class EmployeeDAO extends DAO<Employee> {
-    public static final String EMP_ID_WITH_PREFIX = "emp.ID";
-    public static final String DEP_ID_WITH_PREFIX = "dep.ID";
-    public static final String DEP_NAME_WITH_PREFIX = "dep.NAME";
-    public static final String POS_ID_WITH_PREFIX = "pos.ID";
-    public static final String POS_NAME_WITH_PREFIX = "pos.NAME";
-    public static final String EMP_LAST_NAME_WITH_PREFIX = "emp.LAST_NAME";
-    public static final String EMP_MID_NAME_WITH_PREFIX = "emp.MID_NAME";
-    public static final String EMP_FIRST_NAME_WITH_PREFIX = "emp.FIRST_NAME";
-    public static final String EMP_PHONE_NUM_WITH_PREFIX = "con.PHONE_NUM";
-    public static final String EMP_EMAIL_WITH_PREFIX = "con.EMAIL";
+    private static final String EMP_ID_WITH_PREFIX = "emp.ID";
+    private static final String DEP_ID_WITH_PREFIX = "dep.ID";
+    private static final String DEP_NAME_WITH_PREFIX = "dep.NAME";
+    private static final String POS_ID_WITH_PREFIX = "pos.ID";
+    private static final String POS_NAME_WITH_PREFIX = "pos.NAME";
+    private static final String EMP_LAST_NAME_WITH_PREFIX = "emp.LAST_NAME";
+    private static final String EMP_MID_NAME_WITH_PREFIX = "emp.MID_NAME";
+    private static final String EMP_FIRST_NAME_WITH_PREFIX = "emp.FIRST_NAME";
+    private static final String EMP_PHONE_NUM_WITH_PREFIX = "con.PHONE_NUM";
+    private static final String EMP_EMAIL_WITH_PREFIX = "con.EMAIL";
 
-    private static final String WHERE_ID_EQUALS = DatabaseHelper.COLUMN_ID + " =?";
+    private static final String WHERE_ID_EQUALS = DatabaseContract.Employee.COLUMN_ID + " =?";
 
     public EmployeeDAO(Context mContext) {
         super(mContext);
@@ -38,29 +38,29 @@ public class EmployeeDAO extends DAO<Employee> {
     public long save(Employee value, Integer... ids) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseHelper.COLUMN_ID, value.getId());
-        values.put(DatabaseHelper.COLUMN_IDDEPARTMENT, value.getDepartment().getId());
-        values.put(DatabaseHelper.COLUM_IDPOSITION, value.getPosition().getId());
-        values.put(DatabaseHelper.COLUMN_LAST_NAME, value.getLastName());
-        values.put(DatabaseHelper.COLUMN_MID_NAME, value.getMidName());
-        values.put(DatabaseHelper.COLUMN_FIRST_NAME, value.getFirstName());
+        values.put(DatabaseContract.Employee.COLUMN_ID, value.getId());
+        values.put(DatabaseContract.Employee.COLUMN_ID_DEPARTMENT, value.getDepartment().getId());
+        values.put(DatabaseContract.Employee.COLUM_ID_POSITION, value.getPosition().getId());
+        values.put(DatabaseContract.Employee.COLUMN_LAST_NAME, value.getLastName());
+        values.put(DatabaseContract.Employee.COLUMN_MID_NAME, value.getMidName());
+        values.put(DatabaseContract.Employee.COLUMN_FIRST_NAME, value.getFirstName());
 
-        return database.insert(DatabaseHelper.EMPLOYEE_TABLE, null, values);
+        return database.insert(DatabaseContract.Employee.TABLE_EMPLOYEE, null, values);
     }
 
     @Override
     public int update(Employee value) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseHelper.COLUMN_ID, value.getId());
-        values.put(DatabaseHelper.COLUMN_IDDEPARTMENT, value.getDepartment().getId());
-        values.put(DatabaseHelper.COLUM_IDPOSITION, value.getPosition().getId());
-        values.put(DatabaseHelper.COLUMN_LAST_NAME, value.getLastName());
-        values.put(DatabaseHelper.COLUMN_MID_NAME, value.getMidName());
-        values.put(DatabaseHelper.COLUMN_FIRST_NAME, value.getFirstName());
+        values.put(DatabaseContract.Employee.COLUMN_ID, value.getId());
+        values.put(DatabaseContract.Employee.COLUMN_ID_DEPARTMENT, value.getDepartment().getId());
+        values.put(DatabaseContract.Employee.COLUM_ID_POSITION, value.getPosition().getId());
+        values.put(DatabaseContract.Employee.COLUMN_LAST_NAME, value.getLastName());
+        values.put(DatabaseContract.Employee.COLUMN_MID_NAME, value.getMidName());
+        values.put(DatabaseContract.Employee.COLUMN_FIRST_NAME, value.getFirstName());
 
         return database.update(
-                DatabaseHelper.EMPLOYEE_TABLE, values,
+                DatabaseContract.Employee.TABLE_EMPLOYEE, values,
                 WHERE_ID_EQUALS, new String[]{String.valueOf(value.getId())}
         );
     }
@@ -68,7 +68,7 @@ public class EmployeeDAO extends DAO<Employee> {
     @Override
     public long remove(Employee value) {
         return database.delete(
-                DatabaseHelper.EMPLOYEE_TABLE, WHERE_ID_EQUALS,
+                DatabaseContract.Employee.TABLE_EMPLOYEE, WHERE_ID_EQUALS,
                 new String[]{String.valueOf(value.getId())}
         );
     }
@@ -82,12 +82,13 @@ public class EmployeeDAO extends DAO<Employee> {
                 POS_ID_WITH_PREFIX + "," + POS_NAME_WITH_PREFIX + "," +
                 EMP_LAST_NAME_WITH_PREFIX + "," + EMP_MID_NAME_WITH_PREFIX + "," +
                 EMP_FIRST_NAME_WITH_PREFIX + "," + EMP_PHONE_NUM_WITH_PREFIX + "," +
-                EMP_EMAIL_WITH_PREFIX + " FROM " + DatabaseHelper.EMPLOYEE_TABLE + " emp" +
-                " LEFT OUTER JOIN " + DatabaseHelper.DEPARTMENT_TABLE + " dep" +
+                EMP_EMAIL_WITH_PREFIX + " FROM " + DatabaseContract.Employee.TABLE_EMPLOYEE +
+                " emp" +
+                " LEFT OUTER JOIN " + DatabaseContract.Department.TABLE_DEPARTMENT + " dep" +
                 " ON " + "emp.ID_DEPARTMENT = " + DEP_ID_WITH_PREFIX +
-                " LEFT OUTER JOIN " + DatabaseHelper.POSITION_TABLE + " pos" +
+                " LEFT OUTER JOIN " + DatabaseContract.Position.TABLE_POSITION + " pos" +
                 " ON " + "emp.ID_POSITION = " + POS_ID_WITH_PREFIX +
-                " LEFT OUTER JOIN " + DatabaseHelper.CONTACTS_TABLE + " con" +
+                " LEFT OUTER JOIN " + DatabaseContract.Contact.TABLE_CONTACT+ " con" +
                 " ON " + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);

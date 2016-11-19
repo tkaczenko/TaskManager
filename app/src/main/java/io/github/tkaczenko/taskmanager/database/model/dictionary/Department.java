@@ -15,7 +15,7 @@ public class Department extends DictionaryObject {
         super(id, name);
     }
 
-    protected Department(Parcel parcel) {
+    private Department(Parcel parcel) {
         super(parcel);
     }
 

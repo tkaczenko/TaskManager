@@ -48,10 +48,10 @@ public class EmployeeAdapter extends
         return mData.size();
     }
 
-    public class EmployeeViewHolder extends RecyclerView.ViewHolder {
+    class EmployeeViewHolder extends RecyclerView.ViewHolder {
         TextView tvSurname, tvName, tvPosition, tvDepartment, tvID;
 
-        public EmployeeViewHolder(View itemView) {
+        EmployeeViewHolder(View itemView) {
             super(itemView);
 
             tvSurname = (TextView) itemView.findViewById(R.id.tvSurname);
@@ -61,7 +61,7 @@ public class EmployeeAdapter extends
             tvID = (TextView) itemView.findViewById(R.id.tvNum);
         }
 
-        public void bind(
+        void bind(
                 final Employee employee, final OnItemClickListener listener
         ) {
             tvSurname.setText(employee.getLastName());

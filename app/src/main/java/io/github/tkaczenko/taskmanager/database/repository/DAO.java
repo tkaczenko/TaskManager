@@ -12,12 +12,12 @@ import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
  * Created by tkaczenko on 15.11.16.
  */
 
-public abstract class DAO<V> {
+abstract class DAO<V> {
     protected SQLiteDatabase database;
     private DatabaseHelper databaseHelper;
     private Context mContext;
 
-    public DAO(Context mContext) {
+    DAO(Context mContext) {
         this.mContext = mContext;
         databaseHelper = DatabaseHelper.getHelper(mContext);
         open();

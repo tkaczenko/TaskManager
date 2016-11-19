@@ -22,7 +22,8 @@ public class UpdateDictionaryFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_update_dictionary, container, false);
         EditText editText = (EditText) v.findViewById(R.id.et_name);
         DictionaryObject dictionaryObject = getArguments().getParcelable("object");
-        editText.setText(dictionaryObject.getName());
+        String name = dictionaryObject.getName();
+        editText.setText(name != null ? name : getString(R.string.no_name));
         return v;
     }
 }

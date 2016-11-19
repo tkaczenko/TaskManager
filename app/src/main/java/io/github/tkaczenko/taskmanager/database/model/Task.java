@@ -49,7 +49,7 @@ public class Task implements Parcelable {
         this.sourceNum = sourceNum;
     }
 
-    protected Task(Parcel in) {
+    private Task(Parcel in) {
         id = in.readInt();
         idSource = in.readInt();
         idType = in.readInt();

@@ -15,7 +15,7 @@ public class Position extends DictionaryObject {
         super(id, name);
     }
 
-    protected Position(Parcel parcel) {
+    private Position(Parcel parcel) {
         super(parcel);
     }
 

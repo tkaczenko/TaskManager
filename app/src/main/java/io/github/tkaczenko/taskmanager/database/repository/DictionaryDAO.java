@@ -7,7 +7,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
+import io.github.tkaczenko.taskmanager.database.DatabaseContract;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
@@ -18,7 +18,7 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
  */
 
 public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
-    private static final String WHERE_ID_EQUALS = DatabaseHelper.COLUMN_ID + " =?";
+    private static final String WHERE_ID_EQUALS = DatabaseContract.Department.COLUMN_ID + " =?";
 
     private String tableName;
     private Class dictionaryObjectClass;
@@ -32,8 +32,8 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     @Override
     public long save(T value, Integer... ids) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_ID, value.getId());
-        values.put(DatabaseHelper.COLUMN_NAME, value.getName());
+        values.put(DatabaseContract.Department.COLUMN_ID, value.getId());
+        values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
 
         return database.insert(tableName, null, values);
     }
@@ -41,7 +41,7 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     @Override
     public int update(T value) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_NAME, value.getName());
+        values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
         return database.update(tableName, values,
                 WHERE_ID_EQUALS, new String[]{String.valueOf(value.getId())});
     }
@@ -56,7 +56,8 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     public List<T> getAll() {
         List<T> objects = new ArrayList<>();
         Cursor cursor = database.query(tableName,
-                new String[]{DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME},
+                new String[]{DatabaseContract.Department.COLUMN_ID,
+                        DatabaseContract.Department.COLUMN_NAME},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             T object = getNewInstance();
@@ -81,13 +82,13 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
 
     private void setTableName() {
         if (dictionaryObjectClass == Department.class) {
-            tableName = DatabaseHelper.DEPARTMENT_TABLE;
+            tableName = DatabaseContract.Department.TABLE_DEPARTMENT;
         } else if (dictionaryObjectClass == Position.class) {
-            tableName = DatabaseHelper.POSITION_TABLE;
+            tableName = DatabaseContract.Position.TABLE_POSITION;
         } else if (dictionaryObjectClass == TaskSource.class) {
-            tableName = DatabaseHelper.TASK_SOURCE_TABLE;
+            tableName = DatabaseContract.TaskSource.TABLE_TASK_TOURCE;
         } else {
-            tableName = DatabaseHelper.TASK_TYPE_TABLE;
+            tableName = DatabaseContract.TaskType.TABLE_TASK_TYPE;
         }
     }
 }
