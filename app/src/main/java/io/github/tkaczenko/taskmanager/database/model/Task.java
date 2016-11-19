@@ -4,7 +4,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+
+import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 
 /**
  * Created by tkaczenko on 26.10.16.
@@ -12,8 +16,8 @@ import java.util.Set;
 
 public class Task implements Parcelable {
     private int id;
-    private int idSource;
-    private int idType;
+    private TaskSource taskSource;
+    private TaskType taskType;
     private String shortName;
     private String description;
     private Date dateIssue;
@@ -25,18 +29,19 @@ public class Task implements Parcelable {
     private String sourceDoc;
     private String sourceNum;
 
-    private Set<Employee> employees;
+    private Set<Employee> employees = new HashSet<>();
 
     public Task() {
 
     }
 
-    public Task(int id, int idSource, int idType, String shortName, String description,
-                Date dateIssue, Date datePlanned, Date dateExecution, String rejectionReason,
-                boolean completed, boolean canceled, String sourceDoc, String sourceNum) {
+    public Task(int id, TaskSource taskSource, TaskType taskType, String shortName,
+                String description, Date dateIssue, Date datePlanned, Date dateExecution,
+                String rejectionReason, boolean completed, boolean canceled,
+                String sourceDoc, String sourceNum) {
         this.id = id;
-        this.idSource = idSource;
-        this.idType = idType;
+        this.taskSource = taskSource;
+        this.taskType = taskType;
         this.shortName = shortName;
         this.description = description;
         this.dateIssue = dateIssue;
@@ -51,8 +56,8 @@ public class Task implements Parcelable {
 
     private Task(Parcel in) {
         id = in.readInt();
-        idSource = in.readInt();
-        idType = in.readInt();
+        taskSource = in.readParcelable(TaskSource.class.getClassLoader());
+        taskType = in.readParcelable(TaskType.class.getClassLoader());
         shortName = in.readString();
         description = in.readString();
         rejectionReason = in.readString();
@@ -82,20 +87,20 @@ public class Task implements Parcelable {
         this.id = id;
     }
 
-    public int getIdSource() {
-        return idSource;
+    public TaskSource getTaskSource() {
+        return taskSource;
     }
 
-    public void setIdSource(int idSource) {
-        this.idSource = idSource;
+    public void setTaskSource(TaskSource taskSource) {
+        this.taskSource = taskSource;
     }
 
-    public int getIdType() {
-        return idType;
+    public TaskType getTaskType() {
+        return taskType;
     }
 
-    public void setIdType(int idType) {
-        this.idType = idType;
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
     }
 
     public String getShortName() {
@@ -186,8 +191,8 @@ public class Task implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(getId());
-        dest.writeInt(getIdSource());
-        dest.writeInt(getIdType());
+        dest.writeParcelable(getTaskSource(), flags);
+        dest.writeParcelable(getTaskType(), flags);
         dest.writeString(getShortName());
         dest.writeString(getDescription());
         dest.writeLong(getDateIssue().getTime());
@@ -198,5 +203,9 @@ public class Task implements Parcelable {
         dest.writeInt(isCanceled() ? 1 : 0);
         dest.writeString(getSourceDoc());
         dest.writeString(getSourceNum());
+    }
+
+    public Set<Employee> getEmployees() {
+        return employees;
     }
 }

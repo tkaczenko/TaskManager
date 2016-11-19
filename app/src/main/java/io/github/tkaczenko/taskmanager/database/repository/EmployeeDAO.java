@@ -17,16 +17,16 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
  */
 
 public class EmployeeDAO extends DAO<Employee> {
-    private static final String EMP_ID_WITH_PREFIX = "emp.ID";
-    private static final String DEP_ID_WITH_PREFIX = "dep.ID";
-    private static final String DEP_NAME_WITH_PREFIX = "dep.NAME";
-    private static final String POS_ID_WITH_PREFIX = "pos.ID";
-    private static final String POS_NAME_WITH_PREFIX = "pos.NAME";
-    private static final String EMP_LAST_NAME_WITH_PREFIX = "emp.LAST_NAME";
-    private static final String EMP_MID_NAME_WITH_PREFIX = "emp.MID_NAME";
-    private static final String EMP_FIRST_NAME_WITH_PREFIX = "emp.FIRST_NAME";
-    private static final String EMP_PHONE_NUM_WITH_PREFIX = "con.PHONE_NUM";
-    private static final String EMP_EMAIL_WITH_PREFIX = "con.EMAIL";
+    public static final String EMP_ID_WITH_PREFIX = "emp.ID";
+    public static final String DEP_ID_WITH_PREFIX = "dep.ID";
+    public static final String DEP_NAME_WITH_PREFIX = "dep.NAME";
+    public static final String POS_ID_WITH_PREFIX = "pos.ID";
+    public static final String POS_NAME_WITH_PREFIX = "pos.NAME";
+    public static final String EMP_LAST_NAME_WITH_PREFIX = "emp.LAST_NAME";
+    public static final String EMP_MID_NAME_WITH_PREFIX = "emp.MID_NAME";
+    public static final String EMP_FIRST_NAME_WITH_PREFIX = "emp.FIRST_NAME";
+    public static final String EMP_PHONE_NUM_WITH_PREFIX = "con.PHONE_NUM";
+    public static final String EMP_EMAIL_WITH_PREFIX = "con.EMAIL";
 
     private static final String WHERE_ID_EQUALS = DatabaseContract.Employee.COLUMN_ID + " =?";
 

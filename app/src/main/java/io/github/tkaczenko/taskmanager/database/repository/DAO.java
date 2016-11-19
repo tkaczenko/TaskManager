@@ -34,4 +34,8 @@ abstract class DAO<V> {
         }
         database = databaseHelper.getWritableDatabase();
     }
+
+    public Context getContext() {
+        return mContext;
+    }
 }
