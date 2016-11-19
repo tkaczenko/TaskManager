@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
@@ -138,67 +136,57 @@ public class TasksActivity extends AppCompatActivity
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment = null;
-        Class fragmentClass;
-        Bundle args = new Bundle();
+        Fragment fragment;
+        DictionaryFragment temp;
         switch (menuItem.getItemId()) {
             case R.id.nav_employees:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragmentClass = EmployeeFragment.class;
-                /*List<Employee> employees = employeeDAO.getAll();
-                args.putParcelableArrayList("list", (ArrayList) employees);*/
+                fragment = new EmployeeFragment();
                 break;
             case R.id.nav_sub_positions:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragmentClass = DictionaryFragment.class;
-                List<Position> positions = mDBHelper.getListPosition();
-                args.putParcelableArrayList("list", (ArrayList) positions);
+                temp = new DictionaryFragment<>();
+                temp.setDictionaryObjectClass(Position.class);
+                fragment = temp;
                 break;
             case R.id.nav_sub_departments:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragmentClass = DictionaryFragment.class;
-                List<Department> departments = mDBHelper.getListDepartments();
-                args.putParcelableArrayList("list", (ArrayList) departments);
+                temp = new DictionaryFragment<>();
+                temp.setDictionaryObjectClass(Department.class);
+                fragment = temp;
                 break;
             case R.id.nav_sub_task_types:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragmentClass = DictionaryFragment.class;
-                List<TaskType> taskTypes = mDBHelper.getListTaskTypes();
-                args.putParcelableArrayList("list", (ArrayList) taskTypes);
+                temp = new DictionaryFragment<>();
+                temp.setDictionaryObjectClass(TaskType.class);
+                fragment = temp;
                 break;
             case R.id.nav_sub_task_sources:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragmentClass = DictionaryFragment.class;
-                List<TaskSource> taskSources = mDBHelper.getListTaskSources();
-                args.putParcelableArrayList("list", (ArrayList) taskSources);
+                temp = new DictionaryFragment<>();
+                temp.setDictionaryObjectClass(TaskSource.class);
+                fragment = temp;
                 break;
             default:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragmentClass = DictionaryFragment.class;
-                List<Position> pos = mDBHelper.getListPosition();
-                args.putParcelableArrayList("list", (ArrayList) pos);
+                temp = new DictionaryFragment<>();
+                temp.setDictionaryObjectClass(Position.class);
+                fragment = temp;
                 break;
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        fragment.setArguments(args);
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()

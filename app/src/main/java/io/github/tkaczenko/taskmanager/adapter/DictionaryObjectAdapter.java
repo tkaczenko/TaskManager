@@ -47,17 +47,17 @@ public class DictionaryObjectAdapter extends
         return mData.size();
     }
 
-    public class DictionaryViewHolder extends RecyclerView.ViewHolder {
+    class DictionaryViewHolder extends RecyclerView.ViewHolder {
         TextView name, id;
 
-        public DictionaryViewHolder(View itemView) {
+        DictionaryViewHolder(View itemView) {
             super(itemView);
 
             name = (TextView) itemView.findViewById(R.id.tv_name);
             id = (TextView) itemView.findViewById(R.id.tv_id);
         }
 
-        public void bind(
+        void bind(
                 final DictionaryObject dictionaryObject, final OnItemClickListener listener) {
             name.setText(dictionaryObject.getName());
             id.setText(String.valueOf(dictionaryObject.getId()));
