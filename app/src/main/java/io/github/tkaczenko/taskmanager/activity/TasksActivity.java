@@ -74,17 +74,11 @@ public class TasksActivity extends AppCompatActivity
             if (savedInstanceState != null) {
                 return;
             }
-            //// TODO: 02.11.16 Initialize start fragment
-/*            DictionaryFragments fragment = new DictionaryFragments();
-
-            Bundle args = new Bundle();
-            List<Position> positions = mDBHelper.getListPosition();
-            args.putParcelableArrayList("list", (ArrayList) positions);
-            fragment.setArguments(args);
-
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, fragment).commit();
-            */
+            Fragment fragment = new TaskFragment();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .commit();
         }
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -147,15 +147,15 @@ public class TaskDAO extends DAO<Task> {
                 " ON " + "task.ID_SOURCE = " + TASK_SOURCE_ID +
                 " LEFT OUTER JOIN " + DatabaseContract.TaskType.TABLE_TASK_TYPE + " type" +
                 " ON " + "task.ID_TYPE = " + TASK_TYPE_ID +
-                " INNER JOIN " + DatabaseContract.TaskEmployee.TABLE_NAME + " te" +
+                " LEFT OUTER JOIN " + DatabaseContract.TaskEmployee.TABLE_NAME + " te" +
                 " ON " + "task.ID = te.ID_TASK" +
-                " INNER JOIN " + DatabaseContract.Employee.TABLE_EMPLOYEE + " emp" +
+                " LEFT OUTER JOIN " + DatabaseContract.Employee.TABLE_EMPLOYEE + " emp" +
                 " ON " + "te.ID_EMPLOYEE = emp.ID" +
-                " INNER JOIN " + DatabaseContract.Department.TABLE_DEPARTMENT + " dep" +
+                " LEFT OUTER JOIN " + DatabaseContract.Department.TABLE_DEPARTMENT + " dep" +
                 " ON " + "emp.ID_DEPARTMENT = dep.ID" +
-                " INNER JOIN " + DatabaseContract.Position.TABLE_POSITION + " pos" +
+                " LEFT OUTER JOIN " + DatabaseContract.Position.TABLE_POSITION + " pos" +
                 " ON " + "emp.ID_POSITION = pos.ID" +
-                " INNER JOIN " + DatabaseContract.Contact.TABLE_CONTACT + " con" +
+                " LEFT OUTER JOIN " + DatabaseContract.Contact.TABLE_CONTACT + " con" +
                 " ON " + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);
@@ -169,12 +169,14 @@ public class TaskDAO extends DAO<Task> {
                 if (temp.getId() == id) {
                     task = temp;
                     isFound = true;
+                    break;
                 }
             }
             if (isFound) {
                 task.getEmployees().add(parseEmployee(cursor));
             } else {
                 task = new Task();
+                task.setId(id);
                 TaskSource taskSource = new TaskSource();
                 taskSource.setId(cursor.getInt(1));
                 taskSource.setName(cursor.getString(2));
@@ -185,19 +187,17 @@ public class TaskDAO extends DAO<Task> {
                 task.setDescription(cursor.getString(6));
                 try {
                     task.setDateIssue(formatter.parse(cursor.getString(7)));
-                } catch (ParseException e) {
+                } catch (ParseException | NullPointerException e) {
                     task.setDateIssue(null);
                 }
                 try {
                     task.setDatePlanned(formatter.parse(cursor.getString(8)));
-                } catch (ParseException e) {
+                } catch (ParseException | NullPointerException e) {
                     task.setDatePlanned(null);
                 }
                 try {
                     task.setDateExecution(formatter.parse(cursor.getString(9)));
-                } catch (ParseException e) {
-                    task.setDateExecution(null);
-                } catch (NullPointerException e) {
+                } catch (ParseException | NullPointerException e) {
                     task.setDateExecution(null);
                 }
                 task.setCompleted(cursor.getInt(10) != 0);
@@ -207,6 +207,7 @@ public class TaskDAO extends DAO<Task> {
                 task.setTaskSource(taskSource);
                 task.setTaskType(taskType);
                 task.getEmployees().add(parseEmployee(cursor));
+                tasks.add(task);
             }
         }
         cursor.close();
