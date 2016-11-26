@@ -23,6 +23,7 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
  * Created by tkaczenko on 19.11.16.
  */
 //// TODO: 19.11.16 Implement DAO
+//// TODO: 24.11.16 Implement insert into table
 public class TaskDAO extends DAO<Task> {
     private static final SimpleDateFormat formatter = new SimpleDateFormat(
             "yyyy-MM-dd", Locale.ENGLISH);

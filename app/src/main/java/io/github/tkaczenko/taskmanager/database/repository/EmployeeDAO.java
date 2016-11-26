@@ -88,7 +88,7 @@ public class EmployeeDAO extends DAO<Employee> {
                 " ON " + "emp.ID_DEPARTMENT = " + DEP_ID_WITH_PREFIX +
                 " LEFT OUTER JOIN " + DatabaseContract.Position.TABLE_POSITION + " pos" +
                 " ON " + "emp.ID_POSITION = " + POS_ID_WITH_PREFIX +
-                " LEFT OUTER JOIN " + DatabaseContract.Contact.TABLE_CONTACT+ " con" +
+                " LEFT OUTER JOIN " + DatabaseContract.Contact.TABLE_CONTACT + " con" +
                 " ON " + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);

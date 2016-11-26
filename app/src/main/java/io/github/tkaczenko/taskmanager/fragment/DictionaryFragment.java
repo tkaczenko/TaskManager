@@ -29,6 +29,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     private RecyclerView mRecyclerView;
 
     private Activity mActivity;
+    private GetDicTask mTask;
 
     private DictionaryDAO<T> dictionaryDAO;
     private Class<T> dictionaryObjectClass;
@@ -68,8 +69,8 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(manager);
 
-        GetDicTask task = new GetDicTask(mActivity);
-        task.execute((Void) null);
+        mTask = new GetDicTask(mActivity);
+        mTask.execute((Void) null);
 
         return v;
     }
@@ -114,5 +115,10 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
                 }
             }
         }
+    }
+
+    public void updateView() {
+        mTask = new GetDicTask(mActivity);
+        mTask.execute((Void) null);
     }
 }

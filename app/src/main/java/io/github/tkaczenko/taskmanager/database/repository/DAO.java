@@ -24,8 +24,11 @@ abstract class DAO<V> {
     }
 
     public abstract long save(V value, Integer... ids);
+
     public abstract int update(V value);
+
     public abstract long remove(V value);
+
     public abstract List<V> getAll();
 
     public void open() throws SQLException {

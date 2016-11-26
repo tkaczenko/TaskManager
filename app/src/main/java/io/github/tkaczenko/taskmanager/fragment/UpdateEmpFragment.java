@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
+import io.github.tkaczenko.taskmanager.activity.TasksActivity;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
@@ -30,12 +31,21 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
 
     private Employee employee;
 
+    public interface OnEmployeeChangedListener {
+        void onChangeEmployee();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        employee = getArguments().getParcelable("employee");
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_update_employee, container, false);
 
-        employee = getArguments().getParcelable("employee");
         setUpViews(v);
 
         return v;
@@ -101,7 +111,12 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
                 employee.setDepartment(department);
                 Position position = (Position) sPosition.getSelectedItem();
                 employee.setPosition(position);
-                employeeDAO.update(employee);
+                long result = employeeDAO.update(employee);
+                if (result > 0) {
+                    TasksActivity activity = (TasksActivity) getActivity();
+                    activity.onChangeEmployee();
+                }
+                break;
         }
     }
 }

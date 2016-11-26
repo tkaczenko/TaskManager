@@ -37,12 +37,16 @@ import io.github.tkaczenko.taskmanager.fragment.TaskFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateDictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateEmpFragment;
 
+//// TODO: 24.11.16 Implement insert for all tables
+//// TODO: 24.11.16 Implement update DictionaryDAO
 public class TasksActivity extends AppCompatActivity
         implements DictionaryFragment.OnDictionaryObjectSelectedListener,
-        EmployeeFragment.OnEmployeeSelectedListener, TaskFragment.OnTaskSelectedListener {
+        EmployeeFragment.OnEmployeeSelectedListener, TaskFragment.OnTaskSelectedListener,
+        UpdateDictionaryFragment.OnDictionaryChangedListener, UpdateEmpFragment.OnEmployeeChangedListener {
     private DrawerLayout mDrawer;
     private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
+    private Fragment mFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,20 +137,19 @@ public class TasksActivity extends AppCompatActivity
     }
 
     private void selectDrawerItem(MenuItem menuItem) {
-        Fragment fragment;
         DictionaryFragment temp;
         switch (menuItem.getItemId()) {
             case R.id.nav_tasks:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragment = new TaskFragment();
+                mFragment = new TaskFragment();
                 break;
             case R.id.nav_employees:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                     mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                 }
-                fragment = new EmployeeFragment();
+                mFragment = new EmployeeFragment();
                 break;
             case R.id.nav_sub_positions:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -154,7 +157,7 @@ public class TasksActivity extends AppCompatActivity
                 }
                 temp = new DictionaryFragment<>();
                 temp.setDictionaryObjectClass(Position.class);
-                fragment = temp;
+                mFragment = temp;
                 break;
             case R.id.nav_sub_departments:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -162,7 +165,7 @@ public class TasksActivity extends AppCompatActivity
                 }
                 temp = new DictionaryFragment<>();
                 temp.setDictionaryObjectClass(Department.class);
-                fragment = temp;
+                mFragment = temp;
                 break;
             case R.id.nav_sub_task_types:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -170,7 +173,7 @@ public class TasksActivity extends AppCompatActivity
                 }
                 temp = new DictionaryFragment<>();
                 temp.setDictionaryObjectClass(TaskType.class);
-                fragment = temp;
+                mFragment = temp;
                 break;
             case R.id.nav_sub_task_sources:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -178,7 +181,7 @@ public class TasksActivity extends AppCompatActivity
                 }
                 temp = new DictionaryFragment<>();
                 temp.setDictionaryObjectClass(TaskSource.class);
-                fragment = temp;
+                mFragment = temp;
                 break;
             default:
                 if (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
@@ -186,14 +189,14 @@ public class TasksActivity extends AppCompatActivity
                 }
                 temp = new DictionaryFragment<>();
                 temp.setDictionaryObjectClass(Position.class);
-                fragment = temp;
+                mFragment = temp;
                 break;
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .replace(R.id.fragment_container, mFragment)
                 .commit();
 
         menuItem.setChecked(false);
@@ -261,7 +264,21 @@ public class TasksActivity extends AppCompatActivity
 
     @Override
     public void onTaskSelected(Task task) {
-        //// TODO: 19.11.16 Implement
+        //// TODO: 19.11.16 Implement update Task
 
+    }
+
+    @Override
+    public void onChangeDictionary() {
+        if (mFragment != null && mFragment instanceof DictionaryFragment) {
+            ((DictionaryFragment) mFragment).updateView();
+        }
+    }
+
+    @Override
+    public void onChangeEmployee() {
+        if (mFragment != null && mFragment instanceof EmployeeFragment) {
+            ((EmployeeFragment) mFragment).updateView();
+        }
     }
 }

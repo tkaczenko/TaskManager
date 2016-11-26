@@ -30,7 +30,7 @@ public class Employee implements Parcelable {
     public Employee(int id, Department department, Position position,
                     String lastName, String midName, String firstName) {
         this.id = id;
-        this.department= department;
+        this.department = department;
         this.position = position;
         this.lastName = lastName;
         this.midName = midName;
