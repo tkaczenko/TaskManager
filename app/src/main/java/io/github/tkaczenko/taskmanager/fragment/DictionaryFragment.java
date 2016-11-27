@@ -26,6 +26,7 @@ import io.github.tkaczenko.taskmanager.adapter.DictionaryObjectAdapter;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
 import io.github.tkaczenko.taskmanager.dialog.AddDictionaryObjectDialog;
+import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
 /**
  * Created by tkaczenko on 02.11.16.
@@ -33,54 +34,56 @@ import io.github.tkaczenko.taskmanager.dialog.AddDictionaryObjectDialog;
 
 public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     private RecyclerView mRecyclerView;
-
+    private DictionaryObjectAdapter mAdapter;
     private Activity mActivity;
     private GetDicTask mTask;
 
-    private DictionaryDAO<T> dictionaryDAO;
     private Class<T> dictionaryObjectClass;
+    private DictionaryDAO<T> dictionaryDAO;
     private List<T> mList;
 
-    private DictionaryObjectAdapter mAdapter;
-    private OnDictionaryObjectSelectedListener mListener;
-    private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            return false;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            newText = newText.toLowerCase();
-            List<T> filteredList = new ArrayList<>();
-            for (int i = 0; i < mList.size(); i++) {
-                String name = mList.get(i).getName().toLowerCase();
-                if (name.contains(newText)) {
-                    filteredList.add(mList.get(i));
+    private OnObjectSelectedListener<DictionaryObject> mListener;
+    private DictionaryObjectAdapter.OnItemClickListener mItemClickListener =
+            new DictionaryObjectAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(DictionaryObject item) {
+                    mListener.onSelectObject(item);
                 }
-            }
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mAdapter = new DictionaryObjectAdapter((List<DictionaryObject>) filteredList,
-                    new DictionaryObjectAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(DictionaryObject item) {
-                            mListener.onDictionaryObjectSelected(item);
-                        }
-                    });
-            mRecyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
-            return true;
-        }
-    };
+            };
 
-    private void showAddDialog() {
-        AddDictionaryObjectDialog<T> fragment = new AddDictionaryObjectDialog<>();
-        fragment.setClazz(dictionaryObjectClass);
-        fragment.show(getActivity().getSupportFragmentManager(), "add_to_dictionary");
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnObjectSelectedListener<DictionaryObject>) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement " +
+                    "OnDictionaryObjectSelected");
+        }
     }
 
-    public interface OnDictionaryObjectSelectedListener {
-        void onDictionaryObjectSelected(DictionaryObject object);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = getActivity();
+        dictionaryDAO = new DictionaryDAO<>(mActivity, dictionaryObjectClass);
+        setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_dictionary, container, false);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.rvDictionary);
+
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(manager);
+
+        mTask = new GetDicTask(mActivity);
+        mTask.execute((Void) null);
+
+        return v;
     }
 
     @Override
@@ -100,40 +103,9 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         return true;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = getActivity();
-        dictionaryDAO = new DictionaryDAO<>(mActivity, dictionaryObjectClass);
-        setHasOptionsMenu(true);
-    }
-
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (OnDictionaryObjectSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement " +
-                    "OnDictionaryObjectSelected");
-        }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_dictionary, container, false);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.rvDictionary);
-
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(manager);
-
+    public void updateView() {
         mTask = new GetDicTask(mActivity);
         mTask.execute((Void) null);
-
-        return v;
     }
 
     public void setDictionaryObjectClass(Class<T> type) {
@@ -141,7 +113,6 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     }
 
     public class GetDicTask extends AsyncTask<Void, Void, List<T>> {
-
         private final WeakReference<Activity> activityWeakRef;
 
         GetDicTask(Activity context) {
@@ -161,13 +132,8 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
                 if (dicList != null) {
                     if (dicList.size() != 0) {
                         mAdapter = new DictionaryObjectAdapter(
-                                (List<DictionaryObject>) dicList,
-                                new DictionaryObjectAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(DictionaryObject item) {
-                                        mListener.onDictionaryObjectSelected(item);
-                                    }
-                                });
+                                (List<DictionaryObject>) dicList, mItemClickListener
+                        );
                         mRecyclerView.setAdapter(mAdapter);
                     } else {
                         Toast.makeText(mActivity, "No " + dictionaryObjectClass.getName() +
@@ -179,8 +145,35 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         }
     }
 
-    public void updateView() {
-        mTask = new GetDicTask(mActivity);
-        mTask.execute((Void) null);
+    private void showAddDialog() {
+        AddDictionaryObjectDialog<T> fragment = new AddDictionaryObjectDialog<>();
+        fragment.setClazz(dictionaryObjectClass);
+        fragment.show(getActivity().getSupportFragmentManager(), "add_to_dictionary");
     }
+
+    private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            newText = newText.toLowerCase();
+            List<T> filteredList = new ArrayList<>();
+            for (int i = 0; i < mList.size(); i++) {
+                String name = mList.get(i).getName();
+                if (name != null && name.toLowerCase().contains(newText)) {
+                    filteredList.add(mList.get(i));
+                }
+            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mAdapter = new DictionaryObjectAdapter(
+                    (List<DictionaryObject>) filteredList, mItemClickListener
+            );
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            return true;
+        }
+    };
 }

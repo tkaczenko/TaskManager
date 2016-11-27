@@ -5,11 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 import io.github.tkaczenko.taskmanager.database.DatabaseContract;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
@@ -24,9 +22,6 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
  */
 //// TODO: 19.11.16 Implement DAO
 public class TaskDAO extends DAO<Task> {
-    private static final SimpleDateFormat formatter = new SimpleDateFormat(
-            "yyyy-MM-dd", Locale.ENGLISH);
-
     private static final String WHERE_ID_EQUALS = DatabaseContract.Task.COLUMN_ID + " =?";
 
     private static final String TASK_PREFIX = "task.";
@@ -63,15 +58,15 @@ public class TaskDAO extends DAO<Task> {
         values.put(DatabaseContract.Task.COLUMN_DESCRIPTION, value.getDescription());
         values.put(
                 DatabaseContract.Task.COLUMN_DATE_ISSUE,
-                formatter.format(value.getDateIssue())
+                DatabaseContract.Task.formatter.format(value.getDateIssue())
         );
         values.put(
                 DatabaseContract.Task.COLUMN_DATE_PLANNED,
-                formatter.format(value.getDatePlanned())
+                DatabaseContract.Task.formatter.format(value.getDatePlanned())
         );
         values.put(
                 DatabaseContract.Task.COLUMN_DATE_EXECUTION,
-                formatter.format(value.getDateExecution())
+                DatabaseContract.Task.formatter.format(value.getDateExecution())
         );
         values.put(DatabaseContract.Task.COLUMN_REJECTION_REASON, value.getRejectionReason());
         values.put(DatabaseContract.Task.COLUMN_COMPLETED, value.isCompleted());
@@ -100,15 +95,15 @@ public class TaskDAO extends DAO<Task> {
         values.put(DatabaseContract.Task.COLUMN_DESCRIPTION, value.getDescription());
         values.put(
                 DatabaseContract.Task.COLUMN_DATE_ISSUE,
-                formatter.format(value.getDateIssue())
+                DatabaseContract.Task.formatter.format(value.getDateIssue())
         );
         values.put(
                 DatabaseContract.Task.COLUMN_DATE_PLANNED,
-                formatter.format(value.getDatePlanned())
+                DatabaseContract.Task.formatter.format(value.getDatePlanned())
         );
         values.put(
                 DatabaseContract.Task.COLUMN_DATE_EXECUTION,
-                formatter.format(value.getDateExecution())
+                DatabaseContract.Task.formatter.format(value.getDateExecution())
         );
         values.put(DatabaseContract.Task.COLUMN_REJECTION_REASON, value.getRejectionReason());
         values.put(DatabaseContract.Task.COLUMN_COMPLETED, value.isCompleted());
@@ -186,17 +181,17 @@ public class TaskDAO extends DAO<Task> {
                 task.setShortName(cursor.getString(5));
                 task.setDescription(cursor.getString(6));
                 try {
-                    task.setDateIssue(formatter.parse(cursor.getString(7)));
+                    task.setDateIssue(DatabaseContract.Task.formatter.parse(cursor.getString(7)));
                 } catch (ParseException | NullPointerException e) {
                     task.setDateIssue(null);
                 }
                 try {
-                    task.setDatePlanned(formatter.parse(cursor.getString(8)));
+                    task.setDatePlanned(DatabaseContract.Task.formatter.parse(cursor.getString(8)));
                 } catch (ParseException | NullPointerException e) {
                     task.setDatePlanned(null);
                 }
                 try {
-                    task.setDateExecution(formatter.parse(cursor.getString(9)));
+                    task.setDateExecution(DatabaseContract.Task.formatter.parse(cursor.getString(9)));
                 } catch (ParseException | NullPointerException e) {
                     task.setDateExecution(null);
                 }

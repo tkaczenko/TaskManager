@@ -39,12 +39,35 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_update_employee, container, false);
-
         setUpViews(v);
-
         return v;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnUpdate:
+                EmployeeDAO employeeDAO = new EmployeeDAO(getActivity());
+                employee.setId(Integer.parseInt(etID.getText().toString()));
+                employee.setLastName(etSurname.getText().toString());
+                employee.setMidName(etMidName.getText().toString());
+                employee.setFirstName(etName.getText().toString());
+                employee.getContact().setPhoneNum(etPhone.getText().toString());
+                employee.getContact().setEmail(etEmail.getText().toString());
+                Department department = (Department) sDepartment.getSelectedItem();
+                employee.setDepartment(department);
+                Position position = (Position) sPosition.getSelectedItem();
+                employee.setPosition(position);
+                long result = employeeDAO.update(employee);
+                if (result > 0) {
+                    TasksActivity activity = (TasksActivity) getActivity();
+                    activity.onChangeObject();
+                }
+                break;
+        }
     }
 
     private void setUpViews(View v) {
@@ -89,30 +112,6 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
             sDepartment.setSelection(pos);
             pos = positionAdapter.getPosition(employee.getPosition());
             sPosition.setSelection(pos);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnUpdate:
-                EmployeeDAO employeeDAO = new EmployeeDAO(getActivity());
-                employee.setId(Integer.parseInt(etID.getText().toString()));
-                employee.setLastName(etSurname.getText().toString());
-                employee.setMidName(etMidName.getText().toString());
-                employee.setFirstName(etName.getText().toString());
-                employee.getContact().setPhoneNum(etPhone.getText().toString());
-                employee.getContact().setEmail(etEmail.getText().toString());
-                Department department = (Department) sDepartment.getSelectedItem();
-                employee.setDepartment(department);
-                Position position = (Position) sPosition.getSelectedItem();
-                employee.setPosition(position);
-                long result = employeeDAO.update(employee);
-                if (result > 0) {
-                    TasksActivity activity = (TasksActivity) getActivity();
-                    activity.onChangeObject();
-                }
-                break;
         }
     }
 }

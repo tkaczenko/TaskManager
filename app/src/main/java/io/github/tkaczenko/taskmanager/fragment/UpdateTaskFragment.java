@@ -14,12 +14,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.model.Task;
@@ -33,11 +32,10 @@ import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
 
 public class UpdateTaskFragment extends Fragment implements View.OnClickListener {
     private EditText etShortName, etDescription, etRejection, etSourceDoc, etSourceNum;
-    private TextView tvDateIssue, tvDatePlanned, tvDateExecution;
+    private Button btnDateIssue, btnDatePlanned, btnDateExecution;
     private Spinner sSource, sType;
 
-    private final SimpleDateFormat formatter = new SimpleDateFormat(
-            "yyyy-MM-dd", Locale.ENGLISH);
+    private final DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
     private Task task;
 
@@ -49,11 +47,10 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_update_task, container, false);
-
         setUpViews(v);
-
         return v;
     }
 
@@ -78,12 +75,12 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
         etSourceDoc = (EditText) v.findViewById(R.id.etSourceDoc);
         etSourceNum = (EditText) v.findViewById(R.id.etSourceNum);
 
-        tvDateIssue = (TextView) v.findViewById(R.id.tvDateIssue);
-        tvDatePlanned = (TextView) v.findViewById(R.id.tvDatePlanned);
-        tvDateExecution = (TextView) v.findViewById(R.id.tvDateExecution);
-        tvDateIssue.setOnClickListener(mBtnPickDateListener);
-        tvDatePlanned.setOnClickListener(mBtnPickDateListener);
-        tvDateExecution.setOnClickListener(mBtnPickDateListener);
+        btnDateIssue = (Button) v.findViewById(R.id.btnDateIssue);
+        btnDatePlanned = (Button) v.findViewById(R.id.btnDatePlanned);
+        btnDateExecution = (Button) v.findViewById(R.id.btnDateExecution);
+        btnDateIssue.setOnClickListener(mBtnPickDateListener);
+        btnDatePlanned.setOnClickListener(mBtnPickDateListener);
+        btnDateExecution.setOnClickListener(mBtnPickDateListener);
 
         sSource = (Spinner) v.findViewById(R.id.sSource);
         sType = (Spinner) v.findViewById(R.id.sType);
@@ -117,13 +114,13 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
             etSourceNum.setText(task.getSourceNum());
             Date date = task.getDateIssue();
             String formated = (date != null) ? formatter.format(date) : null;
-            tvDateIssue.setText((formated != null) ? formated : "not");
+            btnDateIssue.setText((formated != null) ? formated : "not");
             date = task.getDatePlanned();
             formated = (date != null) ? formatter.format(date) : null;
-            tvDatePlanned.setText((formated != null) ? formated : "not");
+            btnDatePlanned.setText((formated != null) ? formated : "not");
             date = task.getDateExecution();
             formated = (date != null) ? formatter.format(date) : null;
-            tvDateExecution.setText((formated != null) ? formated : "not");
+            btnDateExecution.setText((formated != null) ? formated : "not");
             int pos = sourceAdapter.getPosition(task.getTaskSource());
             sSource.setSelection(pos);
             pos = typeAdapter.getPosition(task.getTaskType());
@@ -135,7 +132,6 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
     private View.OnClickListener mBtnPickDateListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
-
             DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {

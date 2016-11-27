@@ -2,6 +2,8 @@ package io.github.tkaczenko.taskmanager.database;
 
 import android.provider.BaseColumns;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by tkaczenko on 19.11.16.
  */
@@ -27,6 +29,8 @@ public class DatabaseContract {
         public static final String COLUMN_CANCELED = "CANCELED";
         public static final String COLUMN_SOURCE_DOC = "SOURCE_DOC";
         public static final String COLUMN_SOURCE_NUM = "SOURCE_NUM";
+
+        public static final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     public static abstract class TaskEmployee implements BaseColumns {

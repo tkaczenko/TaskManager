@@ -30,22 +30,11 @@ public class UpdateDictionaryFragment extends Fragment implements View.OnClickLi
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_update_dictionary, container, false);
         setUpViews(v);
         return v;
-    }
-
-    private void setUpViews(View v) {
-        etName = (EditText) v.findViewById(R.id.etName);
-        String name = mObject.getName();
-        etName.setText(name != null ? name : getString(R.string.no_name));
-
-        Button btnUpdate = (Button) v.findViewById(R.id.btnUpdate);
-
-        if (btnUpdate != null) {
-            btnUpdate.setOnClickListener(this);
-        }
     }
 
     @Override
@@ -62,5 +51,14 @@ public class UpdateDictionaryFragment extends Fragment implements View.OnClickLi
                 }
                 break;
         }
+    }
+
+    private void setUpViews(View v) {
+        etName = (EditText) v.findViewById(R.id.etName);
+        String name = mObject.getName();
+        etName.setText(name != null ? name : getString(R.string.no_name));
+
+        Button btnUpdate = (Button) v.findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(this);
     }
 }

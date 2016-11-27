@@ -24,6 +24,7 @@ import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.adapter.EmployeeAdapter;
 import io.github.tkaczenko.taskmanager.database.model.Employee;
 import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
+import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
 /**
  * Created by tkaczenko on 16.11.16.
@@ -34,64 +35,28 @@ public class EmployeeFragment extends Fragment {
     private EmployeeAdapter mAdapter;
     private Activity activity;
     private GetEmpTask task;
-    private OnEmployeeSelectedListener mListener;
 
     private EmployeeDAO employeeDAO;
     private List<Employee> mList;
 
-    private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
-        @Override
-        public boolean onQueryTextSubmit(String query) {
-            return false;
-        }
-
-        @Override
-        public boolean onQueryTextChange(String newText) {
-            newText = newText.toLowerCase();
-            List<Employee> filteredList = new ArrayList<>();
-            for (int i = 0; i < mList.size(); i++) {
-                String id = Integer.toString(mList.get(i).getId());
-                String lastName = mList.get(i).getLastName().toLowerCase();
-                String middleName = mList.get(i).getMidName().toLowerCase();
-                String firstName = mList.get(i).getFirstName().toLowerCase();
-                String phoneNum = mList.get(i).getContact().getPhoneNum();
-                String email = mList.get(i).getContact().getEmail();
-                String position = mList.get(i).getPosition().getName().toLowerCase();
-                String department = mList.get(i).getDepartment().getName().toLowerCase();
-                if (id != null && id.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (lastName != null && lastName.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (middleName != null && middleName.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (firstName != null && firstName.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (phoneNum != null && phoneNum.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (email != null && email.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (position != null && position.contains(newText)) {
-                    filteredList.add(mList.get(i));
-                } else if (department != null && department.contains(newText)) {
-                    filteredList.add(mList.get(i));
+    private OnObjectSelectedListener<Employee> mListener;
+    private EmployeeAdapter.OnItemClickListener mItemClickListener =
+            new EmployeeAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(Employee employee) {
+                    mListener.onSelectObject(employee);
                 }
-            }
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            mAdapter = new EmployeeAdapter(filteredList,
-                    new EmployeeAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(Employee employee) {
-                            mListener.onEmployeeSelected(employee);
-                        }
-                    });
-            mRecyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
-            return true;
-        }
-    };
+            };
 
-    public interface OnEmployeeSelectedListener {
-        void onEmployeeSelected(Employee employee);
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mListener = (OnObjectSelectedListener<Employee>) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implement " +
+                    "OnItemSelected");
+        }
     }
 
     @Override
@@ -100,17 +65,6 @@ public class EmployeeFragment extends Fragment {
         activity = getActivity();
         employeeDAO = new EmployeeDAO(activity);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mListener = (OnEmployeeSelectedListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement " +
-                    "OnItemSelected");
-        }
     }
 
     @Nullable
@@ -136,11 +90,15 @@ public class EmployeeFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public class GetEmpTask extends AsyncTask<Void, Void, List<Employee>> {
+    public void updateView() {
+        task = new GetEmpTask(activity);
+        task.execute((Void) null);
+    }
 
+    public class GetEmpTask extends AsyncTask<Void, Void, List<Employee>> {
         private final WeakReference<Activity> activityWeakRef;
 
-        public GetEmpTask(Activity context) {
+        GetEmpTask(Activity context) {
             this.activityWeakRef = new WeakReference<>(context);
         }
 
@@ -156,13 +114,7 @@ public class EmployeeFragment extends Fragment {
                 mList = empList;
                 if (empList != null) {
                     if (empList.size() != 0) {
-                        mAdapter = new EmployeeAdapter(empList,
-                                new EmployeeAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(Employee employee) {
-                                        mListener.onEmployeeSelected(employee);
-                                    }
-                                });
+                        mAdapter = new EmployeeAdapter(empList, mItemClickListener);
                         mRecyclerView.setAdapter(mAdapter);
                     } else {
                         Toast.makeText(activity, "No Employee Records",
@@ -173,8 +125,48 @@ public class EmployeeFragment extends Fragment {
         }
     }
 
-    public void updateView() {
-        task = new GetEmpTask(activity);
-        task.execute((Void) null);
-    }
+    private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            newText = newText.toLowerCase();
+            List<Employee> filteredList = new ArrayList<>();
+            for (int i = 0; i < mList.size(); i++) {
+                String id = Integer.toString(mList.get(i).getId());
+                String lastName = mList.get(i).getLastName();
+                String middleName = mList.get(i).getMidName();
+                String firstName = mList.get(i).getFirstName();
+                String phoneNum = mList.get(i).getContact().getPhoneNum();
+                String email = mList.get(i).getContact().getEmail();
+                String position = mList.get(i).getPosition().getName();
+                String department = mList.get(i).getDepartment().getName();
+                if (id != null && id.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (lastName != null && lastName.toLowerCase().contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (middleName != null && middleName.toLowerCase().contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (firstName != null && firstName.toLowerCase().contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (phoneNum != null && phoneNum.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (email != null && email.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (position != null && position.toLowerCase().contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (department != null && department.toLowerCase().contains(newText)) {
+                    filteredList.add(mList.get(i));
+                }
+            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mAdapter = new EmployeeAdapter(filteredList, mItemClickListener);
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            return true;
+        }
+    };
 }

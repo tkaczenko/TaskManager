@@ -37,15 +37,13 @@ import io.github.tkaczenko.taskmanager.fragment.TaskFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateDictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateEmpFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateTaskFragment;
-import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectChanged;
+import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectChangedListener;
+import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
 //// TODO: 24.11.16 Implement insert for all tables
 public class TasksActivity extends AppCompatActivity
-        implements DictionaryFragment.OnDictionaryObjectSelectedListener,
-        EmployeeFragment.OnEmployeeSelectedListener, TaskFragment.OnTaskSelectedListener,
-        OnObjectChanged {
+        implements OnObjectSelectedListener, OnObjectChangedListener {
     private DrawerLayout mDrawer;
-    private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
     private Fragment mFragment;
 
@@ -53,27 +51,9 @@ public class TasksActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tasks);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-
-        final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.mipmap.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
-
-        mDBHelper = new DatabaseHelper(this);
-        File database = getApplicationContext().getDatabasePath(DatabaseContract.DATABASE_NAME);
-        if (false == database.exists()) {
-            mDBHelper.getReadableDatabase();
-            if (copyDatabase(this)) {
-                Toast.makeText(this, "Copy database success", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Copy data error", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
+        setUpViews();
+        copyDatabase();
 
         if (findViewById(R.id.fragment_container) != null) {
             if (savedInstanceState != null) {
@@ -84,24 +64,6 @@ public class TasksActivity extends AppCompatActivity
                     .beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .commit();
-        }
-
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        setupDrawerContent(navigationView);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mLayout != null &&
-                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
-                        || mLayout.getPanelState() ==
-                        SlidingUpPanelLayout.PanelState.ANCHORED)) {
-
-            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-
-        } else {
-            super.onBackPressed();
         }
     }
 
@@ -124,16 +86,81 @@ public class TasksActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mLayout != null &&
+                (mLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+                        || mLayout.getPanelState() ==
+                        SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onChangeObject() {
+        if (mFragment != null && mFragment instanceof DictionaryFragment) {
+            ((DictionaryFragment) mFragment).updateView();
+        }
+        if (mFragment != null && mFragment instanceof EmployeeFragment) {
+            ((EmployeeFragment) mFragment).updateView();
+        }
+        if (mFragment != null && mFragment instanceof TaskFragment) {
+            ((TaskFragment) mFragment).updateView();
+        }
+    }
+
+    @Override
+    public void onSelectObject(Object object) {
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+        if (object instanceof Task) {
+            fragment = new UpdateTaskFragment();
+            args.putParcelable("task", (Task) object);
+            mLayout.setTouchEnabled(true);
+        } else if (object instanceof Employee) {
+            fragment = new UpdateEmpFragment();
+            args.putParcelable("employee", (Employee) object);
+            mLayout.setTouchEnabled(true);
+        } else if (object instanceof DictionaryObject) {
+            fragment = new UpdateDictionaryFragment();
+            args.putParcelable("object", (DictionaryObject) object);
+            mLayout.setTouchEnabled(false);
+        }
+
+        fragment.setArguments(args);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+    }
+
+    private void setUpViews() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        mLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setHomeAsUpIndicator(R.mipmap.ic_menu);
+        ab.setDisplayHomeAsUpEnabled(true);
+
+        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        setupDrawerContent(navigationView);
+    }
+
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
-
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         selectDrawerItem(menuItem);
                         return true;
                     }
-
                 });
     }
 
@@ -205,10 +232,23 @@ public class TasksActivity extends AppCompatActivity
         mDrawer.closeDrawers();
     }
 
+    private void copyDatabase() {
+        DatabaseHelper dbHelper = DatabaseHelper.getHelper(this);
+        File database = getApplicationContext().getDatabasePath(DatabaseContract.DATABASE_NAME);
+        if (!database.exists()) {
+            dbHelper.getReadableDatabase();
+            if (copyDatabase(this)) {
+                Toast.makeText(this, "Copy database success", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Copy data error", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     private boolean copyDatabase(Context context) {
         try {
             InputStream inputStream = context.getAssets().open(DatabaseContract.DATABASE_NAME);
-            String outFileName = DatabaseHelper.DBLOCATION + DatabaseContract.DATABASE_NAME;
+            String outFileName = DatabaseHelper.DB_LOCATION + DatabaseContract.DATABASE_NAME;
             OutputStream outputStream = new FileOutputStream(outFileName);
             byte[] buff = new byte[1024];
             int length = 0;
@@ -221,77 +261,6 @@ public class TasksActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    @Override
-    public void onDictionaryObjectSelected(DictionaryObject object) {
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        Fragment fragment = null;
-        Bundle args = new Bundle();
-        try {
-            fragment = UpdateDictionaryFragment.class.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        args.putParcelable("object", object);
-        fragment.setArguments(args);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-        mLayout.setTouchEnabled(false);
-    }
-
-
-    @Override
-    public void onEmployeeSelected(Employee employee) {
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        Fragment fragment = null;
-        Bundle args = new Bundle();
-        try {
-            fragment = UpdateEmpFragment.class.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        args.putParcelable("employee", employee);
-        fragment.setArguments(args);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-        mLayout.setTouchEnabled(true);
-    }
-
-    @Override
-    public void onTaskSelected(Task task) {
-        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        Fragment fragment = null;
-        Bundle args = new Bundle();
-        try {
-            fragment = UpdateTaskFragment.class.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        args.putParcelable("task", task);
-        fragment.setArguments(args);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
-        mLayout.setTouchEnabled(true);
-    }
-
-    @Override
-    public void onChangeObject() {
-        if (mFragment != null && mFragment instanceof DictionaryFragment) {
-            ((DictionaryFragment) mFragment).updateView();
-        }
-        if (mFragment != null && mFragment instanceof EmployeeFragment) {
-            ((EmployeeFragment) mFragment).updateView();
-        }
-        if (mFragment != null && mFragment instanceof TaskFragment) {
-            ((TaskFragment) mFragment).updateView();
         }
     }
 }

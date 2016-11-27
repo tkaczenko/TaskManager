@@ -6,9 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.List;
-import java.util.Locale;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.model.Task;
@@ -52,10 +51,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     class TaskViewHolder extends RecyclerView.ViewHolder {
         private TextView tvShortName, tvCompleted, tvCanceled, tvDateIssue, tvDatePlanned;
 
-        private final SimpleDateFormat formatter = new SimpleDateFormat(
-                "yyyy-MM-dd", Locale.ENGLISH);
+        private final DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
-        public TaskViewHolder(View itemView) {
+        TaskViewHolder(View itemView) {
             super(itemView);
 
             tvShortName = (TextView) itemView.findViewById(R.id.tvShortName);
