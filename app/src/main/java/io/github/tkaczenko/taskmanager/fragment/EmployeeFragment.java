@@ -8,12 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
@@ -27,14 +31,64 @@ import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
 
 public class EmployeeFragment extends Fragment {
     private RecyclerView mRecyclerView;
-
+    private EmployeeAdapter mAdapter;
     private Activity activity;
+    private GetEmpTask task;
+    private OnEmployeeSelectedListener mListener;
 
     private EmployeeDAO employeeDAO;
+    private List<Employee> mList;
 
-    private GetEmpTask task;
+    private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
 
-    private OnEmployeeSelectedListener mListener;
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            newText = newText.toLowerCase();
+            List<Employee> filteredList = new ArrayList<>();
+            for (int i = 0; i < mList.size(); i++) {
+                String id = Integer.toString(mList.get(i).getId());
+                String lastName = mList.get(i).getLastName().toLowerCase();
+                String middleName = mList.get(i).getMidName().toLowerCase();
+                String firstName = mList.get(i).getFirstName().toLowerCase();
+                String phoneNum = mList.get(i).getContact().getPhoneNum();
+                String email = mList.get(i).getContact().getEmail();
+                String position = mList.get(i).getPosition().getName().toLowerCase();
+                String department = mList.get(i).getDepartment().getName().toLowerCase();
+                if (id != null && id.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (lastName != null && lastName.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (middleName != null && middleName.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (firstName != null && firstName.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (phoneNum != null && phoneNum.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (email != null && email.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (position != null && position.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                } else if (department != null && department.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                }
+            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mAdapter = new EmployeeAdapter(filteredList,
+                    new EmployeeAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Employee employee) {
+                            mListener.onEmployeeSelected(employee);
+                        }
+                    });
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            return true;
+        }
+    };
 
     public interface OnEmployeeSelectedListener {
         void onEmployeeSelected(Employee employee);
@@ -45,6 +99,7 @@ public class EmployeeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         activity = getActivity();
         employeeDAO = new EmployeeDAO(activity);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -74,6 +129,13 @@ public class EmployeeFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(mSearchListener);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     public class GetEmpTask extends AsyncTask<Void, Void, List<Employee>> {
 
         private final WeakReference<Activity> activityWeakRef;
@@ -91,16 +153,17 @@ public class EmployeeFragment extends Fragment {
         protected void onPostExecute(List<Employee> empList) {
             if (activityWeakRef.get() != null
                     && !activityWeakRef.get().isFinishing()) {
+                mList = empList;
                 if (empList != null) {
                     if (empList.size() != 0) {
-                        EmployeeAdapter adapter = new EmployeeAdapter(empList,
+                        mAdapter = new EmployeeAdapter(empList,
                                 new EmployeeAdapter.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(Employee employee) {
                                         mListener.onEmployeeSelected(employee);
                                     }
                                 });
-                        mRecyclerView.setAdapter(adapter);
+                        mRecyclerView.setAdapter(mAdapter);
                     } else {
                         Toast.makeText(activity, "No Employee Records",
                                 Toast.LENGTH_LONG).show();
