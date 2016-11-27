@@ -11,6 +11,10 @@ public class TaskType extends DictionaryObject {
 
     }
 
+    public TaskType(String name) {
+        super(name);
+    }
+
     public TaskType(int id, String name) {
         super(id, name);
     }

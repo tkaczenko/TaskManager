@@ -11,6 +11,10 @@ public class Position extends DictionaryObject {
 
     }
 
+    public Position(String name) {
+        super(name);
+    }
+
     public Position(int id, String name) {
         super(id, name);
     }

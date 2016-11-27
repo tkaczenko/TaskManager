@@ -15,6 +15,10 @@ public abstract class DictionaryObject implements Parcelable {
 
     }
 
+    protected DictionaryObject(String name) {
+        this.name = name;
+    }
+
     protected DictionaryObject(int id, String name) {
         this.id = id;
         this.name = name;

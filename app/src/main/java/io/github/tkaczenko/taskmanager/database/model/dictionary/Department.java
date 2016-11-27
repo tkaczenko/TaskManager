@@ -11,6 +11,10 @@ public class Department extends DictionaryObject {
 
     }
 
+    public Department(String name) {
+        super(name);
+    }
+
     public Department(int id, String name) {
         super(id, name);
     }

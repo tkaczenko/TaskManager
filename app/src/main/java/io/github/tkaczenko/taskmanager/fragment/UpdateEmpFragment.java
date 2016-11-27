@@ -31,10 +31,6 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
 
     private Employee employee;
 
-    public interface OnEmployeeChangedListener {
-        void onChangeEmployee();
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +110,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
                 long result = employeeDAO.update(employee);
                 if (result > 0) {
                     TasksActivity activity = (TasksActivity) getActivity();
-                    activity.onChangeEmployee();
+                    activity.onChangeObject();
                 }
                 break;
         }

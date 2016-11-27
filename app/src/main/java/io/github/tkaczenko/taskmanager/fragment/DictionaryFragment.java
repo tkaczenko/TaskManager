@@ -12,6 +12,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.adapter.DictionaryObjectAdapter;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
+import io.github.tkaczenko.taskmanager.dialog.AddDictionaryObjectDialog;
 
 /**
  * Created by tkaczenko on 02.11.16.
@@ -71,6 +73,12 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         }
     };
 
+    private void showAddDialog() {
+        AddDictionaryObjectDialog<T> fragment = new AddDictionaryObjectDialog<>();
+        fragment.setClazz(dictionaryObjectClass);
+        fragment.show(getActivity().getSupportFragmentManager(), "add_to_dictionary");
+    }
+
     public interface OnDictionaryObjectSelectedListener {
         void onDictionaryObjectSelected(DictionaryObject object);
     }
@@ -83,10 +91,20 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                showAddDialog();
+                break;
+        }
+        return true;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
-        dictionaryDAO = new DictionaryDAO<T>(mActivity, dictionaryObjectClass);
+        dictionaryDAO = new DictionaryDAO<>(mActivity, dictionaryObjectClass);
         setHasOptionsMenu(true);
     }
 

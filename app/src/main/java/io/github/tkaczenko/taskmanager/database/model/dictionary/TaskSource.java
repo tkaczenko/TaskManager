@@ -11,6 +11,10 @@ public class TaskSource extends DictionaryObject {
 
     }
 
+    public TaskSource(String name) {
+        super(name);
+    }
+
     public TaskSource(int id, String name) {
         super(id, name);
     }

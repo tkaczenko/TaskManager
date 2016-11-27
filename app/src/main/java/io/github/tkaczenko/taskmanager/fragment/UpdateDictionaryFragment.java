@@ -22,10 +22,6 @@ public class UpdateDictionaryFragment extends Fragment implements View.OnClickLi
     private EditText etName;
     private DictionaryObject mObject;
 
-    public interface OnDictionaryChangedListener {
-        void onChangeDictionary();
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +58,7 @@ public class UpdateDictionaryFragment extends Fragment implements View.OnClickLi
                 long result = dao.update(mObject);
                 if (result > 0) {
                     TasksActivity activity = (TasksActivity) getActivity();
-                    activity.onChangeDictionary();
+                    activity.onChangeObject();
                 }
                 break;
         }

@@ -37,14 +37,13 @@ import io.github.tkaczenko.taskmanager.fragment.TaskFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateDictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateEmpFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateTaskFragment;
+import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectChanged;
 
 //// TODO: 24.11.16 Implement insert for all tables
-//// TODO: 24.11.16 Implement update DictionaryDAO
 public class TasksActivity extends AppCompatActivity
         implements DictionaryFragment.OnDictionaryObjectSelectedListener,
         EmployeeFragment.OnEmployeeSelectedListener, TaskFragment.OnTaskSelectedListener,
-        UpdateDictionaryFragment.OnDictionaryChangedListener, UpdateEmpFragment.OnEmployeeChangedListener,
-        UpdateTaskFragment.OnTaskChangedListener {
+        OnObjectChanged {
     private DrawerLayout mDrawer;
     private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
@@ -284,21 +283,13 @@ public class TasksActivity extends AppCompatActivity
     }
 
     @Override
-    public void onChangeDictionary() {
+    public void onChangeObject() {
         if (mFragment != null && mFragment instanceof DictionaryFragment) {
             ((DictionaryFragment) mFragment).updateView();
         }
-    }
-
-    @Override
-    public void onChangeEmployee() {
         if (mFragment != null && mFragment instanceof EmployeeFragment) {
             ((EmployeeFragment) mFragment).updateView();
         }
-    }
-
-    @Override
-    public void onChangeTask() {
         if (mFragment != null && mFragment instanceof TaskFragment) {
             ((TaskFragment) mFragment).updateView();
         }

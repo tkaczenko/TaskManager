@@ -41,10 +41,6 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
 
     private Task task;
 
-    public interface OnTaskChangedListener {
-        void onChangeTask();
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
