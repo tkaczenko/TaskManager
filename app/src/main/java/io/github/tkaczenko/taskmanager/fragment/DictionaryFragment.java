@@ -8,12 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
@@ -33,11 +37,49 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
 
     private DictionaryDAO<T> dictionaryDAO;
     private Class<T> dictionaryObjectClass;
+    private List<T> mList;
 
+    private DictionaryObjectAdapter mAdapter;
     private OnDictionaryObjectSelectedListener mListener;
+    private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            newText = newText.toLowerCase();
+            List<T> filteredList = new ArrayList<>();
+            for (int i = 0; i < mList.size(); i++) {
+                String name = mList.get(i).getName().toLowerCase();
+                if (name.contains(newText)) {
+                    filteredList.add(mList.get(i));
+                }
+            }
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mAdapter = new DictionaryObjectAdapter((List<DictionaryObject>) filteredList,
+                    new DictionaryObjectAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(DictionaryObject item) {
+                            mListener.onDictionaryObjectSelected(item);
+                        }
+                    });
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            return true;
+        }
+    };
 
     public interface OnDictionaryObjectSelectedListener {
         void onDictionaryObjectSelected(DictionaryObject object);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(mSearchListener);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -45,6 +87,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
         dictionaryDAO = new DictionaryDAO<T>(mActivity, dictionaryObjectClass);
+        setHasOptionsMenu(true);
     }
 
 
@@ -96,9 +139,10 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         protected void onPostExecute(List<T> dicList) {
             if (activityWeakRef.get() != null
                     && !activityWeakRef.get().isFinishing()) {
+                mList = dicList;
                 if (dicList != null) {
                     if (dicList.size() != 0) {
-                        DictionaryObjectAdapter adapter = new DictionaryObjectAdapter(
+                        mAdapter = new DictionaryObjectAdapter(
                                 (List<DictionaryObject>) dicList,
                                 new DictionaryObjectAdapter.OnItemClickListener() {
                                     @Override
@@ -106,7 +150,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
                                         mListener.onDictionaryObjectSelected(item);
                                     }
                                 });
-                        mRecyclerView.setAdapter(adapter);
+                        mRecyclerView.setAdapter(mAdapter);
                     } else {
                         Toast.makeText(mActivity, "No " + dictionaryObjectClass.getName() +
                                 " Records", Toast.LENGTH_LONG)
