@@ -41,33 +41,36 @@ public class AddDictionaryObjectDialog<T extends DictionaryObject> extends Dialo
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String name = etName.getText().toString();
+                        long result = 0;
                         if (clazz == Position.class) {
                             Position position = new Position(name);
                             DictionaryDAO<Position> dao = new DictionaryDAO<>(
                                     getActivity(), Position.class
                             );
-                            dao.save(position);
+                            result = dao.save(position);
                         } else if (clazz == Department.class) {
                             Department department = new Department(name);
                             DictionaryDAO<Department> dao = new DictionaryDAO<>(
                                     getActivity(), Department.class
                             );
-                            dao.save(department);
+                            result = dao.save(department);
                         } else if (clazz == TaskSource.class) {
                             TaskSource taskSource = new TaskSource(name);
                             DictionaryDAO<TaskSource> dao = new DictionaryDAO<>(
                                     getActivity(), TaskSource.class
                             );
-                            dao.save(taskSource);
+                            result = dao.save(taskSource);
                         } else if (clazz == TaskType.class) {
                             TaskType taskType = new TaskType(name);
                             DictionaryDAO<TaskType> dao = new DictionaryDAO<>(
                                     getActivity(), TaskType.class
                             );
-                            dao.save(taskType);
+                            result = dao.save(taskType);
                         }
-                        TasksActivity activity = (TasksActivity) getActivity();
-                        activity.onChangeObject();
+                        if (result > 0) {
+                            TasksActivity activity = (TasksActivity) getActivity();
+                            activity.onChangeObject();
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

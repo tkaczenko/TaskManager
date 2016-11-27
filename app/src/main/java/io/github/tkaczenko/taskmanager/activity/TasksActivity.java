@@ -80,9 +80,6 @@ public class TasksActivity extends AppCompatActivity
             mDrawer.openDrawer(GravityCompat.START);
             return true;
         }
-        if (id == R.id.action_settings) {
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 

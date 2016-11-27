@@ -12,6 +12,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.adapter.TaskAdapter;
 import io.github.tkaczenko.taskmanager.database.model.Task;
 import io.github.tkaczenko.taskmanager.database.repository.TaskDAO;
+import io.github.tkaczenko.taskmanager.dialog.AddTaskDialog;
 import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
 /**
@@ -90,6 +92,16 @@ public class TaskFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add:
+                showAddDialog();
+                break;
+        }
+        return true;
+    }
+
     public void updateView() {
         task = new GetTasksTask(activity);
         task.execute((Void) null);
@@ -123,6 +135,11 @@ public class TaskFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void showAddDialog() {
+        AddTaskDialog fragment = new AddTaskDialog();
+        fragment.show(getActivity().getSupportFragmentManager(), "add_to_dictionary");
     }
 
     private SearchView.OnQueryTextListener mSearchListener = new SearchView.OnQueryTextListener() {
