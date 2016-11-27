@@ -22,4 +22,19 @@
     <string name="name">Name</string>
     <string name="update">Update</string>
     <string name="no_name">no name</string>
+    <string name="short_name">Short name</string>
+    <string name="description">Description</string>
+    <string name="date_issue">Date issue</string>
+    <string name="date_planned">Date planned</string>
+    <string name="date_execution">Date execution</string>
+    <string name="text_switch_is_it_completed">Is it completed?</string>
+    <string name="text_switch_off_is_it_completed">Not complete</string>
+    <string name="text_switch_on_is_it_completed">Complete</string>
+    <string name="text_switch_is_it_canceled">Is it canceled?</string>
+    <string name="text_switch_off_is_it_canceled">Not cancele</string>
+    <string name="text_switch_on_is_it_canceled">Cancele</string>
+    <string name="source_document">Source document</string>
+    <string name="source_num">Source num</string>
+    <string name="source">Source</string>
+    <string name="type">Type</string>
 </resources>

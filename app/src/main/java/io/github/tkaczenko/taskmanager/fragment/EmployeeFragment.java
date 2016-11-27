@@ -110,11 +110,6 @@ public class EmployeeFragment extends Fragment {
         }
     }
 
-    /*
-     * This method is invoked from MainActivity onFinishDialog() method. It is
-     * called from CustomEmpDialogFragment when an employee record is updated.
-     * This is used for communicating between fragments.
-     */
     public void updateView() {
         task = new GetEmpTask(activity);
         task.execute((Void) null);

@@ -36,13 +36,15 @@ import io.github.tkaczenko.taskmanager.fragment.EmployeeFragment;
 import io.github.tkaczenko.taskmanager.fragment.TaskFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateDictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.UpdateEmpFragment;
+import io.github.tkaczenko.taskmanager.fragment.UpdateTaskFragment;
 
 //// TODO: 24.11.16 Implement insert for all tables
 //// TODO: 24.11.16 Implement update DictionaryDAO
 public class TasksActivity extends AppCompatActivity
         implements DictionaryFragment.OnDictionaryObjectSelectedListener,
         EmployeeFragment.OnEmployeeSelectedListener, TaskFragment.OnTaskSelectedListener,
-        UpdateDictionaryFragment.OnDictionaryChangedListener, UpdateEmpFragment.OnEmployeeChangedListener {
+        UpdateDictionaryFragment.OnDictionaryChangedListener, UpdateEmpFragment.OnEmployeeChangedListener,
+        UpdateTaskFragment.OnTaskChangedListener {
     private DrawerLayout mDrawer;
     private DatabaseHelper mDBHelper;
     private SlidingUpPanelLayout mLayout;
@@ -264,8 +266,21 @@ public class TasksActivity extends AppCompatActivity
 
     @Override
     public void onTaskSelected(Task task) {
-        //// TODO: 19.11.16 Implement update Task
-
+        mLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        Fragment fragment = null;
+        Bundle args = new Bundle();
+        try {
+            fragment = UpdateTaskFragment.class.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        args.putParcelable("task", task);
+        fragment.setArguments(args);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+        mLayout.setTouchEnabled(true);
     }
 
     @Override
@@ -279,6 +294,13 @@ public class TasksActivity extends AppCompatActivity
     public void onChangeEmployee() {
         if (mFragment != null && mFragment instanceof EmployeeFragment) {
             ((EmployeeFragment) mFragment).updateView();
+        }
+    }
+
+    @Override
+    public void onChangeTask() {
+        if (mFragment != null && mFragment instanceof TaskFragment) {
+            ((TaskFragment) mFragment).updateView();
         }
     }
 }
