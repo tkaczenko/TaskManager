@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -140,23 +139,23 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
                     calendar.set(Calendar.MONTH, month);
                     calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                    TextView textView = (TextView) view;
-                    textView.setText(formatter.format(calendar.getTime()));
+                    Button button = (Button) view;
+                    button.setText(formatter.format(calendar.getTime()));
                 }
             };
 
             int year, month, day;
+            Calendar calendar = Calendar.getInstance();
             try {
-                Date date = formatter.parse(((TextView) view).getText().toString());
-                year = date.getYear();
-                month = date.getMonth();
-                day = date.getDay();
+                Date date = formatter.parse(((Button) view).getText().toString());
+                calendar.setTime(date);
             } catch (ParseException | NullPointerException e) {
-                Calendar calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
+                e.printStackTrace();
             }
+
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog pickerDialog = new DatePickerDialog(
                     getActivity(), listener, year, month, day

@@ -123,17 +123,17 @@ public class AddTaskDialog extends DialogFragment {
             };
 
             int year, month, day;
+            Calendar calendar = Calendar.getInstance();
             try {
                 Date date = formatter.parse(((TextView) view).getText().toString());
-                year = date.getYear();
-                month = date.getMonth();
-                day = date.getDay();
+                calendar.setTime(date);
             } catch (ParseException | NullPointerException e) {
-                Calendar calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                day = calendar.get(Calendar.DAY_OF_MONTH);
+                e.printStackTrace();
             }
+
+            year = calendar.get(Calendar.YEAR);
+            month = calendar.get(Calendar.MONTH);
+            day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog pickerDialog = new DatePickerDialog(
                     getActivity(), listener, year, month, day

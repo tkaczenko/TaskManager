@@ -51,7 +51,6 @@ public class TaskDAO extends DAO<Task> {
     public long save(Task value, Integer... ids) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseContract.Task.COLUMN_ID, value.getId());
         values.put(DatabaseContract.Task.COLUMN_ID_SOURCE, value.getTaskSource().getId());
         values.put(DatabaseContract.Task.COLUMN_ID_TYPE, value.getTaskType().getId());
         values.put(DatabaseContract.Task.COLUMN_SHORT_NAME, value.getShortName());

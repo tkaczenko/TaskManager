@@ -57,68 +57,65 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <LinearLayout
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:stretchColumns="0,1">
 
-            <TextView
-                android:id="@+id/tvDateIssue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date_issue"
-                android:textColor="@color/colorPrimaryText" />
+            <TableRow>
 
-            <Button
-                android:id="@+id/btnDateIssue"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/date_issue"
-                android:textColor="@color/colorPrimary" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvDateIssue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_issue"
+                    android:textColor="@color/colorPrimaryText" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnDateIssue"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_issue"
+                    android:textColor="@color/colorPrimary" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/tvDatePlanned"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date_planned"
-                android:textColor="@color/colorPrimaryText" />
+            <TableRow>
 
-            <Button
-                android:id="@+id/btnDatePlanned"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/date_planned"
-                android:textColor="@color/colorPrimary" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvDatePlanned"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_planned"
+                    android:textColor="@color/colorPrimaryText" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+                <Button
+                    android:id="@+id/btnDatePlanned"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_planned"
+                    android:textColor="@color/colorPrimary" />
+            </TableRow>
 
-            <TextView
-                android:id="@+id/tvDateExecution"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/date_execution"
-                android:textColor="@color/colorPrimaryText" />
+            <TableRow>
 
-            <Button
-                android:id="@+id/btnDateExecution"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/date_planned"
-                android:textColor="@color/colorPrimary" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvDateExecution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_execution"
+                    android:textColor="@color/colorPrimaryText" />
+
+                <Button
+                    android:id="@+id/btnDateExecution"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_planned"
+                    android:textColor="@color/colorPrimary" />
+            </TableRow>
+        </TableLayout>
 
         <TextView
             android:layout_width="wrap_content"
