@@ -47,6 +47,10 @@ public class DictionaryObjectAdapter extends
         return mData.size();
     }
 
+    public DictionaryObject getItem(int position) {
+        return mData.get(position);
+    }
+
     class DictionaryViewHolder extends RecyclerView.ViewHolder {
         TextView name, id;
 

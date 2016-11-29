@@ -48,6 +48,10 @@ public class EmployeeAdapter extends
         return mData.size();
     }
 
+    public Employee getItem(int position) {
+        return mData.get(position);
+    }
+
     class EmployeeViewHolder extends RecyclerView.ViewHolder {
         TextView tvSurname, tvName, tvPosition, tvDepartment, tvID;
 

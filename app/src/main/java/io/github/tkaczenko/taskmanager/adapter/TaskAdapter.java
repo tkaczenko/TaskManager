@@ -43,6 +43,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.bind(mData.get(position), mListener);
     }
 
+    public Task getItem(int position) {
+        return mData.get(position);
+    }
+
     @Override
     public int getItemCount() {
         return mData.size();

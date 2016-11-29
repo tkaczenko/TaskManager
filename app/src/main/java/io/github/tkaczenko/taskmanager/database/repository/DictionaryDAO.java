@@ -32,7 +32,6 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     @Override
     public long save(T value, Integer... ids) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Department.COLUMN_ID, value.getId());
         values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
 
         return database.insert(tableName, null, values);
