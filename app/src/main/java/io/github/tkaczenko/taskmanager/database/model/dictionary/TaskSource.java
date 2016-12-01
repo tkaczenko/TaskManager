@@ -15,10 +15,6 @@ public class TaskSource extends DictionaryObject {
         super(name);
     }
 
-    public TaskSource(int id, String name) {
-        super(id, name);
-    }
-
     private TaskSource(Parcel parcel) {
         super(parcel);
     }

@@ -15,10 +15,6 @@ public class Position extends DictionaryObject {
         super(name);
     }
 
-    public Position(int id, String name) {
-        super(id, name);
-    }
-
     private Position(Parcel parcel) {
         super(parcel);
     }

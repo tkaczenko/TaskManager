@@ -49,7 +49,7 @@ public class EmployeeDAO extends DAO<Employee> {
     }
 
     @Override
-    public int update(Employee value) {
+    public int update(Employee value, Integer... ids) {
         ContentValues values = new ContentValues();
 
         values.put(DatabaseContract.Employee.COLUMN_ID, value.getId());

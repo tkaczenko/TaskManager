@@ -40,7 +40,6 @@ import io.github.tkaczenko.taskmanager.fragment.UpdateTaskFragment;
 import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectChangedListener;
 import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
-//// TODO: 24.11.16 Implement insert for all tables
 public class TasksActivity extends AppCompatActivity
         implements OnObjectSelectedListener, OnObjectChangedListener {
     private DrawerLayout mDrawer;

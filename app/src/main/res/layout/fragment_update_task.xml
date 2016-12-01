@@ -177,6 +177,13 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimaryText" />
 
+        <io.github.tkaczenko.taskmanager.view.MultiSelectSpinner
+            android:id="@+id/searchMultiSpinner"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginTop="20dp" />
+
         <Button
             android:id="@+id/btnUpdate"
             android:layout_width="match_parent"

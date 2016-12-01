@@ -9,4 +9,8 @@
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDividerColor">#bdbdbd</color>
+    <color name="list_even">#AAAAAA</color>
+    <color name="list_odd">#E1E2E2</color>
+    <color name="list_selected">#455FB6</color>
+    <color name="list_header">#99979C</color>
 </resources>

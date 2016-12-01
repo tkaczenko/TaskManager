@@ -38,7 +38,7 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     }
 
     @Override
-    public int update(T value) {
+    public int update(T value, Integer... ids) {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
         return database.update(tableName, values,

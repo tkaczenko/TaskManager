@@ -54,13 +54,27 @@ public class Employee implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(getId());
-        dest.writeParcelable(getDepartment(), flags);
-        dest.writeParcelable(getPosition(), flags);
+        dest.writeInt(id);
+        dest.writeParcelable(department, flags);
+        dest.writeParcelable(position, flags);
         dest.writeString(lastName);
         dest.writeString(midName);
         dest.writeString(firstName);
-        dest.writeParcelable(getContact(), flags);
+        dest.writeParcelable(contact, flags);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        boolean result = false;
+        if (object == null || object.getClass() != getClass()) {
+            result = false;
+        } else {
+            Employee employee = (Employee) object;
+            if (this.id == employee.getId()) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     public static final Parcelable.Creator<Employee> CREATOR = new Parcelable.Creator<Employee>() {
@@ -145,9 +159,9 @@ public class Employee implements Parcelable {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(getId());
-            dest.writeString(getPhoneNum());
-            dest.writeString(getEmail());
+            dest.writeInt(id);
+            dest.writeString(phoneNum);
+            dest.writeString(email);
         }
     }
 

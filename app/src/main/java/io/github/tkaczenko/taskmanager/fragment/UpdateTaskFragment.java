@@ -12,18 +12,25 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
+import io.github.tkaczenko.taskmanager.database.model.Employee;
 import io.github.tkaczenko.taskmanager.database.model.Task;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
+import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
+import io.github.tkaczenko.taskmanager.view.KeyPairBoolData;
+import io.github.tkaczenko.taskmanager.view.MultiSelectSpinner;
+import io.github.tkaczenko.taskmanager.view.SpinnerListener;
 
 /**
  * Created by tkaczenko on 27.11.16.
@@ -105,6 +112,19 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
         );
         sType.setAdapter(typeAdapter);
 
+        MultiSelectSpinner searchSpinner = (MultiSelectSpinner) v.findViewById(R.id.searchMultiSpinner);
+        EmployeeDAO employeeDAO = new EmployeeDAO(getActivity());
+        List<Employee> employees = employeeDAO.getAll();
+        final List<KeyPairBoolData> listArray = new ArrayList<>();
+        for (int i = 0; i < employees.size(); i++) {
+            KeyPairBoolData h = new KeyPairBoolData();
+            h.setId(i + 1);
+            h.setName(employees.get(i).getLastName() + employees.get(i).getFirstName());
+            h.setObject(employees.get(i));
+            h.setSelected(false);
+            listArray.add(h);
+        }
+
         if (task != null) {
             etShortName.setText(task.getShortName());
             etDescription.setText(task.getDescription());
@@ -124,7 +144,32 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
             sSource.setSelection(pos);
             pos = typeAdapter.getPosition(task.getTaskType());
             sType.setSelection(pos);
+            List<Employee> employeeSet = task.getEmployees();
+            for (KeyPairBoolData keyPairBoolData : listArray) {
+                if (employeeSet.contains(keyPairBoolData.getObject())) {
+                    keyPairBoolData.setSelected(true);
+                }
+            }
         }
+
+        searchSpinner.setLimit(20, new MultiSelectSpinner.LimitExceedListener() {
+            @Override
+            public void onLimitListener(KeyPairBoolData data) {
+                Toast.makeText(getActivity(), "LIMIT", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        });
+
+        searchSpinner.setItems(listArray, -1, new SpinnerListener() {
+            @Override
+            public void onItemsSelected(List<KeyPairBoolData> items) {
+                for (int i = 0; i < items.size(); i++) {
+                    if (items.get(i).isSelected()) {
+                        task.getEmployees().add((Employee) items.get(i).getObject());
+                    }
+                }
+            }
+        });
 
     }
 

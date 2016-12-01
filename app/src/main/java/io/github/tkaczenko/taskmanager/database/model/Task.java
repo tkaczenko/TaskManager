@@ -3,8 +3,10 @@ package io.github.tkaczenko.taskmanager.database.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
@@ -29,7 +31,7 @@ public class Task implements Parcelable {
     private String sourceDoc;
     private String sourceNum;
 
-    private Set<Employee> employees = new HashSet<>();
+    private List<Employee> employees = new ArrayList<>();
 
     public Task() {
 
@@ -60,6 +62,12 @@ public class Task implements Parcelable {
         taskType = in.readParcelable(TaskType.class.getClassLoader());
         shortName = in.readString();
         description = in.readString();
+        long date = in.readLong();
+        dateIssue = (date != -1) ? new Date(date) : null;
+        date = in.readLong();
+        datePlanned = (date != -1) ? new Date(date) : null;
+        date = in.readLong();
+        dateExecution = (date != -1) ? new Date(date) : null;
         rejectionReason = in.readString();
         completed = in.readInt() != 0;
         canceled = in.readInt() != 0;
@@ -191,21 +199,21 @@ public class Task implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(getId());
-        dest.writeParcelable(getTaskSource(), flags);
-        dest.writeParcelable(getTaskType(), flags);
-        dest.writeString(getShortName());
-        dest.writeString(getDescription());
-        dest.writeLong(getDateIssue().getTime());
-        dest.writeLong(getDatePlanned().getTime());
-        dest.writeLong(getDateExecution().getTime());
-        dest.writeString(getRejectionReason());
-        dest.writeInt(isCompleted() ? 1 : 0);
-        dest.writeInt(isCanceled() ? 1 : 0);
-        dest.writeString(getSourceDoc());
-        dest.writeString(getSourceNum());
+        dest.writeParcelable(taskSource, flags);
+        dest.writeParcelable(taskType, flags);
+        dest.writeString(shortName);
+        dest.writeString(description);
+        dest.writeLong(dateIssue != null ? dateIssue.getTime() : -1);
+        dest.writeLong(datePlanned != null ? datePlanned.getTime() : -1);
+        dest.writeLong(dateExecution != null ? dateExecution.getTime() : -1);
+        dest.writeString(rejectionReason);
+        dest.writeInt(completed ? 1 : 0);
+        dest.writeInt(canceled ? 1 : 0);
+        dest.writeString(sourceDoc);
+        dest.writeString(sourceNum);
     }
 
-    public Set<Employee> getEmployees() {
+    public List<Employee> getEmployees() {
         return employees;
     }
 }

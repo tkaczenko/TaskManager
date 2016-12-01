@@ -15,10 +15,6 @@ public class Department extends DictionaryObject {
         super(name);
     }
 
-    public Department(int id, String name) {
-        super(id, name);
-    }
-
     private Department(Parcel parcel) {
         super(parcel);
     }

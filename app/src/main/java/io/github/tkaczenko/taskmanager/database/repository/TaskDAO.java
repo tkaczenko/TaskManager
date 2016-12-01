@@ -20,7 +20,7 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
 /**
  * Created by tkaczenko on 19.11.16.
  */
-//// TODO: 19.11.16 Implement DAO
+//// TODO: 29.11.16 Test DAO
 public class TaskDAO extends DAO<Task> {
     private static final String WHERE_ID_EQUALS = DatabaseContract.Task.COLUMN_ID + " =?";
 
@@ -84,7 +84,7 @@ public class TaskDAO extends DAO<Task> {
     }
 
     @Override
-    public int update(Task value) {
+    public int update(Task value, Integer... ids) {
         ContentValues values = new ContentValues();
 
         values.put(DatabaseContract.Task.COLUMN_ID, value.getId());
@@ -110,15 +110,26 @@ public class TaskDAO extends DAO<Task> {
         values.put(DatabaseContract.Task.COLUMN_SOURCE_DOC, value.getSourceDoc());
         values.put(DatabaseContract.Task.COLUMN_SOURCE_NUM, value.getSourceNum());
 
-        return database.update(
+        int taskID = database.update(
                 DatabaseContract.Task.TABLE_TASK, values,
                 WHERE_ID_EQUALS, new String[]{String.valueOf(value.getId())}
         );
+
+        List<Integer> ints = Arrays.asList(ids);
+
+        for (Integer id : ints) {
+            createOrUpdateTaskEmp(taskID, id);
+        }
+
+        return taskID;
     }
 
     @Override
     public long remove(Task value) {
-        return 0;
+        return database.delete(
+                DatabaseContract.Task.TABLE_TASK, WHERE_ID_EQUALS,
+                new String[]{String.valueOf(value.getId())}
+        );
     }
 
     @Override
@@ -206,6 +217,24 @@ public class TaskDAO extends DAO<Task> {
         }
         cursor.close();
         return tasks;
+    }
+
+    private long createOrUpdateTaskEmp(long taskID, int empID) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.TaskEmployee.COLUMN_TASK, taskID);
+        values.put(DatabaseContract.TaskEmployee.COLUMN_EMPLOYEE, empID);
+
+        long count = database.update(
+                DatabaseContract.TaskEmployee.TABLE_NAME, values,
+                DatabaseContract.TaskEmployee.COLUMN_EMPLOYEE + "=?",
+                new String[]{String.valueOf(empID)}
+        );
+        if (count <= 0) {
+            count = database.insert(
+                    DatabaseContract.TaskEmployee.TABLE_NAME, null, values
+            );
+        }
+        return count;
     }
 
     private long createTaskEmp(long taskID, int empID) {

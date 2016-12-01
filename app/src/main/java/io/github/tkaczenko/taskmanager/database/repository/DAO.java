@@ -25,7 +25,7 @@ abstract class DAO<V> {
 
     public abstract long save(V value, Integer... ids);
 
-    public abstract int update(V value);
+    public abstract int update(V value, Integer... ids);
 
     public abstract long remove(V value);
 
