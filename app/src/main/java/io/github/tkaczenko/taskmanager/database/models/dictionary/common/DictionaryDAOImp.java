@@ -18,7 +18,7 @@ import io.github.tkaczenko.taskmanager.database.models.dictionary.TaskSource;
  */
 
 public class DictionaryDAOImp<E extends Dictionary> extends BaseDAOImp<E> implements DictionaryDAO<E> {
-    private static final String WHERE_ID_EQUALS = DatabaseContract.Department.COLUMN_ID + " =?";
+    private static final String WHERE_ID_EQUALS = DatabaseContract.Departments.COLUMN_ID + " =?";
 
     private String tableName;
     private Class dictionaryObjectClass;
@@ -32,7 +32,7 @@ public class DictionaryDAOImp<E extends Dictionary> extends BaseDAOImp<E> implem
     @Override
     public long save(E value) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
+        values.put(DatabaseContract.Departments.COLUMN_NAME, value.getName());
 
         return database.insert(tableName, null, values);
     }
@@ -40,7 +40,7 @@ public class DictionaryDAOImp<E extends Dictionary> extends BaseDAOImp<E> implem
     @Override
     public int update(E value) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
+        values.put(DatabaseContract.Departments.COLUMN_NAME, value.getName());
         return database.update(tableName, values,
                 WHERE_ID_EQUALS, new String[]{String.valueOf(value.getId())});
     }
@@ -55,8 +55,8 @@ public class DictionaryDAOImp<E extends Dictionary> extends BaseDAOImp<E> implem
     public List<E> getAll() {
         List<E> objects = new ArrayList<>();
         Cursor cursor = database.query(tableName,
-                new String[]{DatabaseContract.Department.COLUMN_ID,
-                        DatabaseContract.Department.COLUMN_NAME},
+                new String[]{DatabaseContract.Departments.COLUMN_ID,
+                        DatabaseContract.Departments.COLUMN_NAME},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
             E object = getNewInstance();
@@ -82,13 +82,13 @@ public class DictionaryDAOImp<E extends Dictionary> extends BaseDAOImp<E> implem
 
     private void setTableName() {
         if (dictionaryObjectClass == Department.class) {
-            tableName = DatabaseContract.Department.TABLE_NAME;
+            tableName = DatabaseContract.Departments.TABLE_NAME;
         } else if (dictionaryObjectClass == Position.class) {
-            tableName = DatabaseContract.Position.TABLE_NAME;
+            tableName = DatabaseContract.Positions.TABLE_NAME;
         } else if (dictionaryObjectClass == TaskSource.class) {
-            tableName = DatabaseContract.TaskSource.TABLE_NAME;
+            tableName = DatabaseContract.TaskSources.TABLE_NAME;
         } else {
-            tableName = DatabaseContract.TaskType.TABLE_NAME;
+            tableName = DatabaseContract.TaskTypes.TABLE_NAME;
         }
     }
 }

@@ -23,7 +23,7 @@ import io.github.tkaczenko.taskmanager.database.models.employee.EmployeeDAOImp;
  */
 
 public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
-    private static final String WHERE_ID_EQUALS = DatabaseContract.Task.COLUMN_ID + " =?";
+    private static final String WHERE_ID_EQUALS = DatabaseContract.Tasks.COLUMN_ID + " =?";
 
     private static final String TASK_PREFIX = "task.";
     private static final String TASK_SOURCE_PREFIX = "src.";
@@ -53,29 +53,29 @@ public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
     public long save(Task value) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseContract.Task.COLUMN_ID_SOURCE, value.getTaskSource().getId());
-        values.put(DatabaseContract.Task.COLUMN_ID_TYPE, value.getTaskType().getId());
-        values.put(DatabaseContract.Task.COLUMN_SHORT_NAME, value.getShortName());
-        values.put(DatabaseContract.Task.COLUMN_DESCRIPTION, value.getDescription());
+        values.put(DatabaseContract.Tasks.COLUMN_ID_SOURCE, value.getTaskSource().getId());
+        values.put(DatabaseContract.Tasks.COLUMN_ID_TYPE, value.getTaskType().getId());
+        values.put(DatabaseContract.Tasks.COLUMN_SHORT_NAME, value.getShortName());
+        values.put(DatabaseContract.Tasks.COLUMN_DESCRIPTION, value.getDescription());
         values.put(
-                DatabaseContract.Task.COLUMN_DATE_ISSUE,
-                DatabaseContract.Task.formatter.format(value.getDateIssue())
+                DatabaseContract.Tasks.COLUMN_DATE_ISSUE,
+                DatabaseContract.Tasks.formatter.format(value.getDateIssue())
         );
         values.put(
-                DatabaseContract.Task.COLUMN_DATE_PLANNED,
-                DatabaseContract.Task.formatter.format(value.getDatePlanned())
+                DatabaseContract.Tasks.COLUMN_DATE_PLANNED,
+                DatabaseContract.Tasks.formatter.format(value.getDatePlanned())
         );
         values.put(
-                DatabaseContract.Task.COLUMN_DATE_EXECUTION,
-                DatabaseContract.Task.formatter.format(value.getDateExecution())
+                DatabaseContract.Tasks.COLUMN_DATE_EXECUTION,
+                DatabaseContract.Tasks.formatter.format(value.getDateExecution())
         );
-        values.put(DatabaseContract.Task.COLUMN_REJECTION_REASON, value.getRejectionReason());
-        values.put(DatabaseContract.Task.COLUMN_COMPLETED, value.isCompleted());
-        values.put(DatabaseContract.Task.COLUMN_CANCELED, value.isCanceled());
-        values.put(DatabaseContract.Task.COLUMN_SOURCE_DOC, value.getSourceDoc());
-        values.put(DatabaseContract.Task.COLUMN_SOURCE_NUM, value.getSourceNum());
+        values.put(DatabaseContract.Tasks.COLUMN_REJECTION_REASON, value.getRejectionReason());
+        values.put(DatabaseContract.Tasks.COLUMN_COMPLETED, value.isCompleted());
+        values.put(DatabaseContract.Tasks.COLUMN_CANCELED, value.isCanceled());
+        values.put(DatabaseContract.Tasks.COLUMN_SOURCE_DOC, value.getSourceDoc());
+        values.put(DatabaseContract.Tasks.COLUMN_SOURCE_NUM, value.getSourceNum());
 
-        long taskID = database.insert(DatabaseContract.Task.TABLE_NAME, null, values);
+        long taskID = database.insert(DatabaseContract.Tasks.TABLE_NAME, null, values);
 
         for (Employee employee : value.getEmployees()) {
             createTaskEmp(taskID, employee.getId());
@@ -88,39 +88,39 @@ public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
     public int update(Task value) {
         ContentValues values = new ContentValues();
 
-        values.put(DatabaseContract.Task.COLUMN_ID_SOURCE, value.getTaskSource().getId());
-        values.put(DatabaseContract.Task.COLUMN_ID_TYPE, value.getTaskType().getId());
-        values.put(DatabaseContract.Task.COLUMN_SHORT_NAME, value.getShortName());
-        values.put(DatabaseContract.Task.COLUMN_DESCRIPTION, value.getDescription());
+        values.put(DatabaseContract.Tasks.COLUMN_ID_SOURCE, value.getTaskSource().getId());
+        values.put(DatabaseContract.Tasks.COLUMN_ID_TYPE, value.getTaskType().getId());
+        values.put(DatabaseContract.Tasks.COLUMN_SHORT_NAME, value.getShortName());
+        values.put(DatabaseContract.Tasks.COLUMN_DESCRIPTION, value.getDescription());
         Date date = value.getDateIssue();
         if (date != null) {
             values.put(
-                    DatabaseContract.Task.COLUMN_DATE_ISSUE,
-                    DatabaseContract.Task.formatter.format(value.getDateIssue())
+                    DatabaseContract.Tasks.COLUMN_DATE_ISSUE,
+                    DatabaseContract.Tasks.formatter.format(value.getDateIssue())
             );
         }
         date = value.getDatePlanned();
         if (date != null) {
             values.put(
-                    DatabaseContract.Task.COLUMN_DATE_PLANNED,
-                    DatabaseContract.Task.formatter.format(value.getDatePlanned())
+                    DatabaseContract.Tasks.COLUMN_DATE_PLANNED,
+                    DatabaseContract.Tasks.formatter.format(value.getDatePlanned())
             );
         }
         date = value.getDateExecution();
         if (date != null) {
             values.put(
-                    DatabaseContract.Task.COLUMN_DATE_EXECUTION,
-                    DatabaseContract.Task.formatter.format(value.getDateExecution())
+                    DatabaseContract.Tasks.COLUMN_DATE_EXECUTION,
+                    DatabaseContract.Tasks.formatter.format(value.getDateExecution())
             );
         }
-        values.put(DatabaseContract.Task.COLUMN_REJECTION_REASON, value.getRejectionReason());
-        values.put(DatabaseContract.Task.COLUMN_COMPLETED, value.isCompleted());
-        values.put(DatabaseContract.Task.COLUMN_CANCELED, value.isCanceled());
-        values.put(DatabaseContract.Task.COLUMN_SOURCE_DOC, value.getSourceDoc());
-        values.put(DatabaseContract.Task.COLUMN_SOURCE_NUM, value.getSourceNum());
+        values.put(DatabaseContract.Tasks.COLUMN_REJECTION_REASON, value.getRejectionReason());
+        values.put(DatabaseContract.Tasks.COLUMN_COMPLETED, value.isCompleted());
+        values.put(DatabaseContract.Tasks.COLUMN_CANCELED, value.isCanceled());
+        values.put(DatabaseContract.Tasks.COLUMN_SOURCE_DOC, value.getSourceDoc());
+        values.put(DatabaseContract.Tasks.COLUMN_SOURCE_NUM, value.getSourceNum());
 
         int taskID = database.update(
-                DatabaseContract.Task.TABLE_NAME, values,
+                DatabaseContract.Tasks.TABLE_NAME, values,
                 WHERE_ID_EQUALS, new String[]{String.valueOf(value.getId())}
         );
 
@@ -138,7 +138,7 @@ public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
     @Override
     public long remove(Task value) {
         return database.delete(
-                DatabaseContract.Task.TABLE_NAME, WHERE_ID_EQUALS,
+                DatabaseContract.Tasks.TABLE_NAME, WHERE_ID_EQUALS,
                 new String[]{String.valueOf(value.getId())}
         );
     }
@@ -158,20 +158,20 @@ public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
                 "," + EmployeeDAOImp.EMP_MID_NAME_WITH_PREFIX + "," +
                 EmployeeDAOImp.EMP_FIRST_NAME_WITH_PREFIX + "," +
                 EmployeeDAOImp.EMP_PHONE_NUM_WITH_PREFIX + "," + EmployeeDAOImp.EMP_EMAIL_WITH_PREFIX +
-                " FROM " + DatabaseContract.Task.TABLE_NAME + " task" +
-                " LEFT OUTER JOIN " + DatabaseContract.TaskSource.TABLE_NAME + " src" +
+                " FROM " + DatabaseContract.Tasks.TABLE_NAME + " task" +
+                " LEFT OUTER JOIN " + DatabaseContract.TaskSources.TABLE_NAME + " src" +
                 " ON " + "task.ID_SOURCE = " + TASK_SOURCE_ID +
-                " LEFT OUTER JOIN " + DatabaseContract.TaskType.TABLE_NAME + " type" +
+                " LEFT OUTER JOIN " + DatabaseContract.TaskTypes.TABLE_NAME + " type" +
                 " ON " + "task.ID_TYPE = " + TASK_TYPE_ID +
                 " LEFT OUTER JOIN " + DatabaseContract.TaskEmployee.TABLE_NAME + " te" +
                 " ON " + "task.ID = te.ID_TASK" +
-                " LEFT OUTER JOIN " + DatabaseContract.Employee.TABLE_NAME + " emp" +
+                " LEFT OUTER JOIN " + DatabaseContract.Employees.TABLE_NAME + " emp" +
                 " ON " + "te.ID_EMPLOYEE = emp.ID" +
-                " LEFT OUTER JOIN " + DatabaseContract.Department.TABLE_NAME + " dep" +
+                " LEFT OUTER JOIN " + DatabaseContract.Departments.TABLE_NAME + " dep" +
                 " ON " + "emp.ID_DEPARTMENT = dep.ID" +
-                " LEFT OUTER JOIN " + DatabaseContract.Position.TABLE_NAME + " pos" +
+                " LEFT OUTER JOIN " + DatabaseContract.Positions.TABLE_NAME + " pos" +
                 " ON " + "emp.ID_POSITION = pos.ID" +
-                " LEFT OUTER JOIN " + DatabaseContract.Contact.TABLE_NAME + " con" +
+                " LEFT OUTER JOIN " + DatabaseContract.Contacts.TABLE_NAME + " con" +
                 " ON " + "emp.ID = con.ID";
 
         Cursor cursor = database.rawQuery(query, null);
@@ -202,17 +202,17 @@ public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
                 task.setShortName(cursor.getString(5));
                 task.setDescription(cursor.getString(6));
                 try {
-                    task.setDateIssue(DatabaseContract.Task.formatter.parse(cursor.getString(7)));
+                    task.setDateIssue(DatabaseContract.Tasks.formatter.parse(cursor.getString(7)));
                 } catch (ParseException | NullPointerException e) {
                     task.setDateIssue(null);
                 }
                 try {
-                    task.setDatePlanned(DatabaseContract.Task.formatter.parse(cursor.getString(8)));
+                    task.setDatePlanned(DatabaseContract.Tasks.formatter.parse(cursor.getString(8)));
                 } catch (ParseException | NullPointerException e) {
                     task.setDatePlanned(null);
                 }
                 try {
-                    task.setDateExecution(DatabaseContract.Task.formatter.parse(cursor.getString(9)));
+                    task.setDateExecution(DatabaseContract.Tasks.formatter.parse(cursor.getString(9)));
                 } catch (ParseException | NullPointerException e) {
                     task.setDateExecution(null);
                 }
