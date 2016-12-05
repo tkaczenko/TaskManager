@@ -24,7 +24,6 @@
             android:textColor="@color/colorPrimaryText"
             android:textSize="16sp" />
 
-
         <TextView
             android:id="@+id/tvCompleted"
             android:layout_width="wrap_content"
@@ -39,8 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvShortName"
+            android:layout_marginStart="2dp"
             android:layout_marginLeft="2dp"
             android:layout_toRightOf="@+id/tvCompleted"
+            android:layout_toEndOf="@+id/tvCompleted"
             android:text="Canceled"
             android:textColor="@color/colorSecondaryText"
             android:textSize="14sp" />
@@ -60,6 +61,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_below="@+id/tvDateIssue"
             android:layout_marginTop="3dp"
             android:text="Planned date"

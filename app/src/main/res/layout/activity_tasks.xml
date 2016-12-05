@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
+
     <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            tools:context="io.github.tkaczenko.taskmanager.activity.TasksActivity">
+            tools:context="io.github.tkaczenko.taskmanager.activities.TasksActivity">
 
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
