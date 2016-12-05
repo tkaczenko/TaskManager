@@ -21,7 +21,7 @@ import io.github.tkaczenko.taskmanager.database.models.employee.EmployeeDAOImp;
 /**
  * Created by tkaczenko on 19.11.16.
  */
-//// TODO: 29.11.16 Test BaseDAOImp
+
 public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
     private static final String WHERE_ID_EQUALS = DatabaseContract.Task.COLUMN_ID + " =?";
 
@@ -78,7 +78,7 @@ public class TaskDAOImp extends BaseDAOImp<Task> implements TaskDAO {
         long taskID = database.insert(DatabaseContract.Task.TABLE_NAME, null, values);
 
         for (Employee employee : value.getEmployees()) {
-            createTaskEmp(value.getId(), employee.getId());
+            createTaskEmp(taskID, employee.getId());
         }
 
         return taskID;

@@ -114,7 +114,7 @@
                     style="?android:attr/buttonBarButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/date_planned"
+                    android:text="@string/date_execution"
                     android:textColor="@color/colorPrimary" />
             </TableRow>
         </TableLayout>

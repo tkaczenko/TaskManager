@@ -45,12 +45,12 @@ import io.github.tkaczenko.taskmanager.views.SpinnerListener;
 public class UpdateTaskFragment extends Fragment implements View.OnClickListener {
     private EditText etShortName, etDescription, etRejection, etSourceDoc, etSourceNum;
     private Button btnDateIssue, btnDatePlanned, btnDateExecution;
-    private Spinner sSource, sType;
     private SwitchCompat switchCompleted, switchCanceled;
+    private MultiSelectSpinner searchSpinner;
+    private Spinner sSource, sType;
 
     private final DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
-    private MultiSelectSpinner searchSpinner;
     private Task task;
 
     @Override
