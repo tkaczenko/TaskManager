@@ -24,13 +24,13 @@ import java.io.OutputStream;
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.database.DatabaseContract;
 import io.github.tkaczenko.taskmanager.database.DatabaseHelper;
-import io.github.tkaczenko.taskmanager.database.model.Employee;
-import io.github.tkaczenko.taskmanager.database.model.Task;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
+import io.github.tkaczenko.taskmanager.database.model.task.Task;
 import io.github.tkaczenko.taskmanager.fragment.DictionaryFragment;
 import io.github.tkaczenko.taskmanager.fragment.EmployeeFragment;
 import io.github.tkaczenko.taskmanager.fragment.TaskFragment;
@@ -43,6 +43,7 @@ import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListe
 public class TasksActivity extends AppCompatActivity
         implements OnObjectSelectedListener, OnObjectChangedListener {
     private DrawerLayout mDrawer;
+
     private SlidingUpPanelLayout mLayout;
     private Fragment mFragment;
 
@@ -58,10 +59,10 @@ public class TasksActivity extends AppCompatActivity
             if (savedInstanceState != null) {
                 return;
             }
-            Fragment fragment = new TaskFragment();
+            mFragment = new TaskFragment();
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
+                    .replace(R.id.fragment_container, mFragment)
                     .commit();
         }
     }
@@ -100,9 +101,11 @@ public class TasksActivity extends AppCompatActivity
             ((DictionaryFragment) mFragment).updateView();
         }
         if (mFragment != null && mFragment instanceof EmployeeFragment) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             ((EmployeeFragment) mFragment).updateView();
         }
         if (mFragment != null && mFragment instanceof TaskFragment) {
+            mLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
             ((TaskFragment) mFragment).updateView();
         }
     }

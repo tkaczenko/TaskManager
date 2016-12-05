@@ -33,8 +33,8 @@ import java.util.List;
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
 import io.github.tkaczenko.taskmanager.adapter.TaskAdapter;
-import io.github.tkaczenko.taskmanager.database.model.Task;
-import io.github.tkaczenko.taskmanager.database.repository.TaskDAO;
+import io.github.tkaczenko.taskmanager.database.model.task.Task;
+import io.github.tkaczenko.taskmanager.database.model.task.TaskDAOImp;
 import io.github.tkaczenko.taskmanager.dialog.AddTaskDialog;
 import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
@@ -48,7 +48,7 @@ public class TaskFragment extends Fragment {
     private Activity activity;
     private GetTasksTask task;
 
-    private TaskDAO taskDAO;
+    private TaskDAOImp taskDAOImp;
     private List<Task> mList;
 
     private OnObjectSelectedListener<Task> mListener;
@@ -75,7 +75,7 @@ public class TaskFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        taskDAO = new TaskDAO(activity);
+        taskDAOImp = new TaskDAOImp(activity);
         setHasOptionsMenu(true);
     }
 
@@ -129,7 +129,7 @@ public class TaskFragment extends Fragment {
 
         @Override
         protected List<Task> doInBackground(Void... arg0) {
-            return taskDAO.getAll();
+            return taskDAOImp.getAll();
         }
 
         @Override
@@ -215,7 +215,7 @@ public class TaskFragment extends Fragment {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
-            long result = taskDAO.remove(mAdapter.getItem(position));
+            long result = taskDAOImp.remove(mAdapter.getItem(position));
             if (result > 0) {
                 TasksActivity activity = (TasksActivity) getActivity();
                 activity.onChangeObject();

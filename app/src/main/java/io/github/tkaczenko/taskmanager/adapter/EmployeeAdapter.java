@@ -9,7 +9,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
-import io.github.tkaczenko.taskmanager.database.model.Employee;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
 
 /**
  * Created by tkaczenko on 16.11.16.

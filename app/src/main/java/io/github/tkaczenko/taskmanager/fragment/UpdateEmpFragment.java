@@ -1,5 +1,7 @@
 package io.github.tkaczenko.taskmanager.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,11 +17,11 @@ import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
-import io.github.tkaczenko.taskmanager.database.model.Employee;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
-import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
+import io.github.tkaczenko.taskmanager.database.model.employee.EmployeeDAOImp;
 
 /**
  * Created by tkaczenko on 17.11.16.
@@ -50,8 +52,22 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnUpdate:
-                EmployeeDAO employeeDAO = new EmployeeDAO(getActivity());
-                employee.setId(Integer.parseInt(etID.getText().toString()));
+                EmployeeDAOImp employeeDAOImp = new EmployeeDAOImp(getActivity());
+                String id = etID.getText().toString();
+                if (id.isEmpty()) {
+                    new AlertDialog.Builder(getActivity())
+                            .setTitle("Error")
+                            .setMessage("Please, write id for employee")
+                            .setCancelable(false)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    etID.requestFocus();
+                                }
+                            }).show();
+                    return;
+                }
+                employee.setId(Integer.parseInt(id));
                 employee.setLastName(etSurname.getText().toString());
                 employee.setMidName(etMidName.getText().toString());
                 employee.setFirstName(etName.getText().toString());
@@ -61,7 +77,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
                 employee.setDepartment(department);
                 Position position = (Position) sPosition.getSelectedItem();
                 employee.setPosition(position);
-                long result = employeeDAO.update(employee);
+                long result = employeeDAOImp.update(employee);
                 if (result > 0) {
                     TasksActivity activity = (TasksActivity) getActivity();
                     activity.onChangeObject();
@@ -85,7 +101,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
             btnUpdate.setOnClickListener(this);
         }
 
-        DictionaryDAO<Department> departmentDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<Department> departmentDAO = new DictionaryDAOImp<>(
                 getActivity(), Department.class
         );
         List<Department> departments = departmentDAO.getAll();
@@ -93,7 +109,7 @@ public class UpdateEmpFragment extends Fragment implements View.OnClickListener 
                 android.R.layout.simple_list_item_1, departments);
         sDepartment.setAdapter(departmentAdapter);
 
-        DictionaryDAO<Position> positionDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<Position> positionDAO = new DictionaryDAOImp<>(
                 getActivity(), Position.class
         );
         List<Position> positions = positionDAO.getAll();

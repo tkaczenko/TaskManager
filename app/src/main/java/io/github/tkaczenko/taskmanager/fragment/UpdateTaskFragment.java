@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,14 @@ import java.util.Date;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
-import io.github.tkaczenko.taskmanager.database.model.Employee;
-import io.github.tkaczenko.taskmanager.database.model.Task;
+import io.github.tkaczenko.taskmanager.activity.TasksActivity;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
+import io.github.tkaczenko.taskmanager.database.model.task.Task;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
-import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
+import io.github.tkaczenko.taskmanager.database.model.employee.EmployeeDAOImp;
+import io.github.tkaczenko.taskmanager.database.model.task.TaskDAOImp;
 import io.github.tkaczenko.taskmanager.view.KeyPairBoolData;
 import io.github.tkaczenko.taskmanager.view.MultiSelectSpinner;
 import io.github.tkaczenko.taskmanager.view.SpinnerListener;
@@ -40,9 +43,11 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
     private EditText etShortName, etDescription, etRejection, etSourceDoc, etSourceNum;
     private Button btnDateIssue, btnDatePlanned, btnDateExecution;
     private Spinner sSource, sType;
+    private SwitchCompat switchCompleted, switchCanceled;
 
     private final DateFormat formatter = DateFormat.getDateInstance(DateFormat.SHORT);
 
+    private MultiSelectSpinner searchSpinner;
     private Task task;
 
     @Override
@@ -64,12 +69,40 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnUpdate:
-                break;
-            case R.id.tvDateIssue:
-                break;
-            case R.id.tvDatePlanned:
-                break;
-            case R.id.tvDateExecution:
+                TaskDAOImp taskDAOImp = new TaskDAOImp(getActivity());
+                task.setShortName(etShortName.getText().toString());
+                task.setRejectionReason(etRejection.getText().toString());
+                task.setDescription(etDescription.getText().toString());
+                task.setSourceDoc(etSourceDoc.getText().toString());
+                task.setSourceNum(etSourceNum.getText().toString());
+                String date = btnDateIssue.getText().toString();
+                try {
+                    task.setDateIssue((!date.isEmpty()) ? formatter.parse(date) : null);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                date = btnDatePlanned.getText().toString();
+                try {
+                    task.setDatePlanned((!date.isEmpty()) ? formatter.parse(date) : null);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                date = btnDateExecution.getText().toString();
+                try {
+                    task.setDateExecution((!date.isEmpty()) ? formatter.parse(date) : null);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                task.setTaskSource((TaskSource) sSource.getSelectedItem());
+                task.setTaskType((TaskType) sType.getSelectedItem());
+                task.setCompleted(switchCompleted.isChecked());
+                task.setCanceled(switchCanceled.isChecked());
+
+                int result = taskDAOImp.update(task);
+                if (result > 0) {
+                    TasksActivity activity = (TasksActivity) getActivity();
+                    activity.onChangeObject();
+                }
                 break;
         }
     }
@@ -91,30 +124,33 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
         sSource = (Spinner) v.findViewById(R.id.sSource);
         sType = (Spinner) v.findViewById(R.id.sType);
 
+        switchCompleted = (SwitchCompat) v.findViewById(R.id.switchCompleted);
+        switchCanceled = (SwitchCompat) v.findViewById(R.id.switchCanceled);
+
         Button btnUpdate = (Button) v.findViewById(R.id.btnUpdate);
         btnUpdate.setOnClickListener(this);
 
-        DictionaryDAO<TaskSource> sourceDictionaryDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<TaskSource> sourceDictionaryDAOImp = new DictionaryDAOImp<>(
                 getActivity(), TaskSource.class
         );
-        List<TaskSource> sources = sourceDictionaryDAO.getAll();
+        List<TaskSource> sources = sourceDictionaryDAOImp.getAll();
         ArrayAdapter<TaskSource> sourceAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1, sources
         );
         sSource.setAdapter(sourceAdapter);
 
-        DictionaryDAO<TaskType> typeDictionaryDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<TaskType> typeDictionaryDAOImp = new DictionaryDAOImp<>(
                 getActivity(), TaskType.class
         );
-        List<TaskType> types = typeDictionaryDAO.getAll();
+        List<TaskType> types = typeDictionaryDAOImp.getAll();
         ArrayAdapter<TaskType> typeAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1, types
         );
         sType.setAdapter(typeAdapter);
 
-        MultiSelectSpinner searchSpinner = (MultiSelectSpinner) v.findViewById(R.id.searchMultiSpinner);
-        EmployeeDAO employeeDAO = new EmployeeDAO(getActivity());
-        List<Employee> employees = employeeDAO.getAll();
+        searchSpinner = (MultiSelectSpinner) v.findViewById(R.id.searchMultiSpinner);
+        final EmployeeDAOImp employeeDAOImp = new EmployeeDAOImp(getActivity());
+        final List<Employee> employees = employeeDAOImp.getAll();
         final List<KeyPairBoolData> listArray = new ArrayList<>();
         for (int i = 0; i < employees.size(); i++) {
             KeyPairBoolData h = new KeyPairBoolData();
@@ -150,6 +186,8 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
                     keyPairBoolData.setSelected(true);
                 }
             }
+            switchCompleted.setChecked(task.isCompleted());
+            switchCanceled.setChecked(task.isCanceled());
         }
 
         searchSpinner.setLimit(20, new MultiSelectSpinner.LimitExceedListener() {
@@ -165,7 +203,13 @@ public class UpdateTaskFragment extends Fragment implements View.OnClickListener
             public void onItemsSelected(List<KeyPairBoolData> items) {
                 for (int i = 0; i < items.size(); i++) {
                     if (items.get(i).isSelected()) {
-                        task.getEmployees().add((Employee) items.get(i).getObject());
+                        Employee employee = (Employee) items.get(i).getObject();
+                        if (!task.getEmployees().contains(employee)) {
+                            task.getEmployees().add(employee);
+                        }
+                    } else {
+                        Employee employee = (Employee) items.get(i).getObject();
+                        task.getEmployees().remove(employee);
                     }
                 }
             }

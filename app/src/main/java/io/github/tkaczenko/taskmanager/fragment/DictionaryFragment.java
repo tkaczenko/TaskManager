@@ -34,7 +34,7 @@ import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
 import io.github.tkaczenko.taskmanager.adapter.DictionaryObjectAdapter;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
 import io.github.tkaczenko.taskmanager.dialog.AddDictionaryObjectDialog;
 import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
@@ -49,7 +49,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     private GetDicTask mTask;
 
     private Class<T> dictionaryObjectClass;
-    private DictionaryDAO<T> dictionaryDAO;
+    private DictionaryDAOImp<T> dictionaryDAOImp;
     private List<T> mList;
 
     private OnObjectSelectedListener<DictionaryObject> mListener;
@@ -76,7 +76,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = getActivity();
-        dictionaryDAO = new DictionaryDAO<>(mActivity, dictionaryObjectClass);
+        dictionaryDAOImp = new DictionaryDAOImp<>(mActivity, dictionaryObjectClass);
         setHasOptionsMenu(true);
     }
 
@@ -134,7 +134,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
 
         @Override
         protected List<T> doInBackground(Void... arg0) {
-            return dictionaryDAO.getAll();
+            return dictionaryDAOImp.getAll();
         }
 
         @Override
@@ -224,7 +224,7 @@ public class DictionaryFragment<T extends DictionaryObject> extends Fragment {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
-            long result = dictionaryDAO.remove((T) mAdapter.getItem(position));
+            long result = dictionaryDAOImp.remove((T) mAdapter.getItem(position));
             if (result > 0) {
                 TasksActivity activity = (TasksActivity) getActivity();
                 activity.onChangeObject();

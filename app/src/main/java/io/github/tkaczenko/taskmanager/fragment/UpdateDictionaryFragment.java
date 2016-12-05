@@ -12,7 +12,7 @@ import android.widget.EditText;
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
 
 /**
  * Created by tkaczenko on 02.11.16.
@@ -42,7 +42,7 @@ public class UpdateDictionaryFragment extends Fragment implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btnUpdate:
                 Class mObjectClass = mObject.getClass();
-                DictionaryDAO dao = new DictionaryDAO(getActivity(), mObjectClass);
+                DictionaryDAOImp dao = new DictionaryDAOImp(getActivity(), mObjectClass);
                 mObject.setName(etName.getText().toString());
                 long result = dao.update(mObject);
                 if (result > 0) {

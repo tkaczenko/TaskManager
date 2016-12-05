@@ -1,4 +1,4 @@
-package io.github.tkaczenko.taskmanager.database.repository;
+package io.github.tkaczenko.taskmanager.database.model.dictionary;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,29 +8,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.database.DatabaseContract;
-import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
-import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObject;
-import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
-import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
+import io.github.tkaczenko.taskmanager.database.common.BaseDAOImp;
 
 /**
  * Created by tkaczenko on 15.11.16.
  */
 
-public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
+public class DictionaryDAOImp<V extends DictionaryObject> extends BaseDAOImp<V> {
     private static final String WHERE_ID_EQUALS = DatabaseContract.Department.COLUMN_ID + " =?";
 
     private String tableName;
     private Class dictionaryObjectClass;
 
-    public DictionaryDAO(Context context, Class<T> type) {
+    public DictionaryDAOImp(Context context, Class<V> type) {
         super(context);
         this.dictionaryObjectClass = type;
         setTableName();
     }
 
     @Override
-    public long save(T value, Integer... ids) {
+    public long save(V value) {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
 
@@ -38,7 +35,7 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     }
 
     @Override
-    public int update(T value, Integer... ids) {
+    public int update(V value) {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.Department.COLUMN_NAME, value.getName());
         return database.update(tableName, values,
@@ -46,20 +43,20 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
     }
 
     @Override
-    public long remove(T value) {
+    public long remove(V value) {
         return database.delete(tableName, WHERE_ID_EQUALS,
                 new String[]{String.valueOf(value.getId())});
     }
 
     @Override
-    public List<T> getAll() {
-        List<T> objects = new ArrayList<>();
+    public List<V> getAll() {
+        List<V> objects = new ArrayList<>();
         Cursor cursor = database.query(tableName,
                 new String[]{DatabaseContract.Department.COLUMN_ID,
                         DatabaseContract.Department.COLUMN_NAME},
                 null, null, null, null, null);
         while (cursor.moveToNext()) {
-            T object = getNewInstance();
+            V object = getNewInstance();
             if (object != null) {
                 object.setId(cursor.getInt(0));
                 object.setName(cursor.getString(1));
@@ -70,9 +67,9 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
         return objects;
     }
 
-    private T getNewInstance() {
+    private V getNewInstance() {
         try {
-            return (T) dictionaryObjectClass.newInstance();
+            return (V) dictionaryObjectClass.newInstance();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -81,13 +78,13 @@ public class DictionaryDAO<T extends DictionaryObject> extends DAO<T> {
 
     private void setTableName() {
         if (dictionaryObjectClass == Department.class) {
-            tableName = DatabaseContract.Department.TABLE_DEPARTMENT;
+            tableName = DatabaseContract.Department.TABLE_NAME;
         } else if (dictionaryObjectClass == Position.class) {
-            tableName = DatabaseContract.Position.TABLE_POSITION;
+            tableName = DatabaseContract.Position.TABLE_NAME;
         } else if (dictionaryObjectClass == TaskSource.class) {
-            tableName = DatabaseContract.TaskSource.TABLE_TASK_TOURCE;
+            tableName = DatabaseContract.TaskSource.TABLE_NAME;
         } else {
-            tableName = DatabaseContract.TaskType.TABLE_TASK_TYPE;
+            tableName = DatabaseContract.TaskType.TABLE_NAME;
         }
     }
 }

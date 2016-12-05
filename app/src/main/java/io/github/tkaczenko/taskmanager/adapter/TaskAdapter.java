@@ -10,7 +10,7 @@ import java.text.DateFormat;
 import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
-import io.github.tkaczenko.taskmanager.database.model.Task;
+import io.github.tkaczenko.taskmanager.database.model.task.Task;
 
 /**
  * Created by tkaczenko on 19.11.16.

@@ -33,8 +33,8 @@ import java.util.List;
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
 import io.github.tkaczenko.taskmanager.adapter.EmployeeAdapter;
-import io.github.tkaczenko.taskmanager.database.model.Employee;
-import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
+import io.github.tkaczenko.taskmanager.database.model.employee.EmployeeDAOImp;
 import io.github.tkaczenko.taskmanager.dialog.AddEmpDialog;
 import io.github.tkaczenko.taskmanager.fragment.interfaces.OnObjectSelectedListener;
 
@@ -48,7 +48,7 @@ public class EmployeeFragment extends Fragment {
     private Activity activity;
     private GetEmpTask task;
 
-    private EmployeeDAO employeeDAO;
+    private EmployeeDAOImp employeeDAOImp;
     private List<Employee> mList;
 
     private OnObjectSelectedListener<Employee> mListener;
@@ -75,7 +75,7 @@ public class EmployeeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = getActivity();
-        employeeDAO = new EmployeeDAO(activity);
+        employeeDAOImp = new EmployeeDAOImp(activity);
         setHasOptionsMenu(true);
     }
 
@@ -129,7 +129,7 @@ public class EmployeeFragment extends Fragment {
 
         @Override
         protected List<Employee> doInBackground(Void... arg0) {
-            return employeeDAO.getAll();
+            return employeeDAOImp.getAll();
         }
 
         @Override
@@ -173,7 +173,7 @@ public class EmployeeFragment extends Fragment {
         @Override
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             int dragFlags = 0;
-            int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+            int swipeFlags = ItemTouchHelper.LEFT;
             return makeMovementFlags(dragFlags, swipeFlags);
         }
 
@@ -190,6 +190,7 @@ public class EmployeeFragment extends Fragment {
             }
 
             if (!initiated) {
+                System.out.println("TUT");
                 init();
             }
 
@@ -215,7 +216,7 @@ public class EmployeeFragment extends Fragment {
         @Override
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
             int position = viewHolder.getAdapterPosition();
-            long result = employeeDAO.remove(mAdapter.getItem(position));
+            long result = employeeDAOImp.remove(mAdapter.getItem(position));
             if (result > 0) {
                 TasksActivity activity = (TasksActivity) getActivity();
                 activity.onChangeObject();

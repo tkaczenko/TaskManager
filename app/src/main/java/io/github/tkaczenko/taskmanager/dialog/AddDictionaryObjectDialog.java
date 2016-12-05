@@ -17,7 +17,7 @@ import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryObjec
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
 
 /**
  * Created by tkaczenko on 27.11.16.
@@ -44,25 +44,25 @@ public class AddDictionaryObjectDialog<T extends DictionaryObject> extends Dialo
                         long result = 0;
                         if (clazz == Position.class) {
                             Position position = new Position(name);
-                            DictionaryDAO<Position> dao = new DictionaryDAO<>(
+                            DictionaryDAOImp<Position> dao = new DictionaryDAOImp<>(
                                     getActivity(), Position.class
                             );
                             result = dao.save(position);
                         } else if (clazz == Department.class) {
                             Department department = new Department(name);
-                            DictionaryDAO<Department> dao = new DictionaryDAO<>(
+                            DictionaryDAOImp<Department> dao = new DictionaryDAOImp<>(
                                     getActivity(), Department.class
                             );
                             result = dao.save(department);
                         } else if (clazz == TaskSource.class) {
                             TaskSource taskSource = new TaskSource(name);
-                            DictionaryDAO<TaskSource> dao = new DictionaryDAO<>(
+                            DictionaryDAOImp<TaskSource> dao = new DictionaryDAOImp<>(
                                     getActivity(), TaskSource.class
                             );
                             result = dao.save(taskSource);
                         } else if (clazz == TaskType.class) {
                             TaskType taskType = new TaskType(name);
-                            DictionaryDAO<TaskType> dao = new DictionaryDAO<>(
+                            DictionaryDAOImp<TaskType> dao = new DictionaryDAOImp<>(
                                     getActivity(), TaskType.class
                             );
                             result = dao.save(taskType);

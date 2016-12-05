@@ -16,11 +16,11 @@ import java.util.List;
 
 import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
-import io.github.tkaczenko.taskmanager.database.model.Employee;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Department;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.Position;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
-import io.github.tkaczenko.taskmanager.database.repository.EmployeeDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
+import io.github.tkaczenko.taskmanager.database.model.employee.EmployeeDAOImp;
 
 /**
  * Created by tkaczenko on 27.11.16.
@@ -45,7 +45,21 @@ public class AddEmpDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Employee employee = new Employee();
-                        employee.setId(Integer.parseInt(etID.getText().toString()));
+                        String id = etID.getText().toString();
+                        if (id.isEmpty()) {
+                            new AlertDialog.Builder(getActivity())
+                                    .setTitle("Error")
+                                    .setMessage("Please, write id for employee")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            etID.requestFocus();
+                                        }
+                                    }).show();
+                            return;
+                        }
+                        employee.setId(Integer.parseInt(id));
                         employee.setLastName(etSurname.getText().toString());
                         employee.setMidName(etMidName.getText().toString());
                         employee.setFirstName(etName.getText().toString());
@@ -56,7 +70,7 @@ public class AddEmpDialog extends DialogFragment {
                         employee.setDepartment((Department) sDepartment.getSelectedItem());
                         employee.setPosition((Position) sPosition.getSelectedItem());
 
-                        EmployeeDAO dao = new EmployeeDAO(getActivity());
+                        EmployeeDAOImp dao = new EmployeeDAOImp(getActivity());
                         long result = dao.save(employee);
                         if (result > 0) {
                             TasksActivity activity = (TasksActivity) getActivity();
@@ -83,7 +97,7 @@ public class AddEmpDialog extends DialogFragment {
         sDepartment = (Spinner) v.findViewById(R.id.sDepartment);
         sPosition = (Spinner) v.findViewById(R.id.sPosition);
 
-        DictionaryDAO<Department> departmentDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<Department> departmentDAO = new DictionaryDAOImp<>(
                 getActivity(), Department.class
         );
         List<Department> departments = departmentDAO.getAll();
@@ -91,7 +105,7 @@ public class AddEmpDialog extends DialogFragment {
                 android.R.layout.simple_list_item_1, departments);
         sDepartment.setAdapter(departmentAdapter);
 
-        DictionaryDAO<Position> positionDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<Position> positionDAO = new DictionaryDAOImp<>(
                 getActivity(), Position.class
         );
         List<Position> positions = positionDAO.getAll();

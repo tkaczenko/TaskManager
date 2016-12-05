@@ -26,7 +26,7 @@ import io.github.tkaczenko.taskmanager.R;
 import io.github.tkaczenko.taskmanager.activity.TasksActivity;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
-import io.github.tkaczenko.taskmanager.database.repository.DictionaryDAO;
+import io.github.tkaczenko.taskmanager.database.model.dictionary.DictionaryDAOImp;
 
 /**
  * Created by tkaczenko on 27.11.16.
@@ -87,19 +87,19 @@ public class AddTaskDialog extends DialogFragment {
         sSource = (Spinner) v.findViewById(R.id.sSource);
         sType = (Spinner) v.findViewById(R.id.sType);
 
-        DictionaryDAO<TaskSource> sourceDictionaryDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<TaskSource> sourceDictionaryDAOImp = new DictionaryDAOImp<>(
                 getActivity(), TaskSource.class
         );
-        List<TaskSource> sources = sourceDictionaryDAO.getAll();
+        List<TaskSource> sources = sourceDictionaryDAOImp.getAll();
         ArrayAdapter<TaskSource> sourceAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1, sources
         );
         sSource.setAdapter(sourceAdapter);
 
-        DictionaryDAO<TaskType> typeDictionaryDAO = new DictionaryDAO<>(
+        DictionaryDAOImp<TaskType> typeDictionaryDAOImp = new DictionaryDAOImp<>(
                 getActivity(), TaskType.class
         );
-        List<TaskType> types = typeDictionaryDAO.getAll();
+        List<TaskType> types = typeDictionaryDAOImp.getAll();
         ArrayAdapter<TaskType> typeAdapter = new ArrayAdapter<>(
                 getActivity(), android.R.layout.simple_list_item_1, types
         );

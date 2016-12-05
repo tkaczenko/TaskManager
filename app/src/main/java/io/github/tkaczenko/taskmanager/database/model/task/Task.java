@@ -1,16 +1,15 @@
-package io.github.tkaczenko.taskmanager.database.model;
+package io.github.tkaczenko.taskmanager.database.model.task;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskSource;
 import io.github.tkaczenko.taskmanager.database.model.dictionary.TaskType;
+import io.github.tkaczenko.taskmanager.database.model.employee.Employee;
 
 /**
  * Created by tkaczenko on 26.10.16.
